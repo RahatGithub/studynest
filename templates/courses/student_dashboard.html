@@ -88,10 +88,10 @@
                         {% endif %}
                         <div class="card-body">
                             <h5 class="card-title">{{ enrollment.course.title }}</h5>
-                            {% if course.tutor.first_name or course.tutor.last_name %}
-                                <p class="small">by <span>{{ course.tutor.first_name }} {{ course.tutor.last_name }}</span></p>
+                            {% if enrollment.course.tutor.first_name or enrollment.course.tutor.last_name %}
+                                <p class="small">by <span>{{ enrollment.course.tutor.first_name }} {{ enrollment.course.tutor.last_name }}</span></p>
                             {% else %}
-                                <p class="small">by <span class="text-primary">{{ course.tutor.username }}</span></p>
+                                <p class="small">by <span class="text-primary">{{ enrollment.course.tutor.username }}</span></p>
                             {% endif %}
                             
                             <!-- Progress Bar -->
