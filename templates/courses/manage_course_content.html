@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Course Content - StudyNest{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Manage: {{ course.title }}</h1>
+        <div>
+            {% if course.is_published %}
+                <span class="badge bg-success me-2">Published</span>
+            {% else %}
+                <span class="badge bg-warning me-2">Draft</span>
+            {% endif %}
+            <a href="{% url 'courses:course_detail' course.slug %}" class="btn btn-sm btn-outline-primary">View Course</a>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Course Info Card -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Course Information</h5>
+                    <p><strong>Category:</strong> {{ course.category.name }}</p>
+                    <p><strong>Type:</strong> {{ course.get_course_type_display }}</p>
+                    {% if course.course_type == 'paid' %}
+                        <p><strong>Price:</strong> BDT {{ course.price }}</p>
+                    {% endif %}
+                    <p><strong>Students Enrolled:</strong> {{ course.get_enrolled_students_count }}</p>
+                    <a href="{% url 'courses:edit_course' course.slug %}" class="btn btn-primary">Edit Course Info</a>
+                </div>
+            </div>
+            
+            <!-- Modules Section -->
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Course Modules</h5>
+                    <a href="{% url 'courses:add_module' course.slug %}" class="btn btn-sm btn-success">Add Module</a>
+                </div>
+                <div class="card-body">
+                    {% if modules %}
+                        <div class="accordion" id="modulesAccordion">
+                            {% for module in modules %}
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button {% if not forloop.first %}collapsed{% endif %}" 
+                                                type="button" data-bs-toggle="collapse" 
+                                                data-bs-target="#module{{ module.id }}">
+                                            <span class="me-2">Module {{ forloop.counter }}:</span>
+                                            <strong>{{ module.title }}</strong>
+                                            <span class="ms-auto me-3 text-muted">
+                                                {{ module.lessons.count }} lessons
+                                            </span>
+                                        </button>
+                                    </h2>
+                                    <div id="module{{ module.id }}" 
+                                         class="accordion-collapse collapse {% if forloop.first %}show{% endif %}"
+                                         data-bs-parent="#modulesAccordion">
+                                        <div class="accordion-body">
+                                            {% if module.description %}
+                                                <p class="text-muted">{{ module.description }}</p>
+                                            {% endif %}
+                                            
+                                            <div class="mb-3">
+                                                <a href="{% url 'courses:edit_module' course.slug module.id %}" 
+                                                   class="btn btn-sm btn-outline-primary">Edit Module</a>
+                                                <a href="{% url 'courses:add_lesson' course.slug module.id %}" 
+                                                   class="btn btn-sm btn-success">Add Lesson</a>
+                                            </div>
+                                            
+                                            {% if module.lessons.exists %}
+                                                <h6>Lessons:</h6>
+                                                <ul class="list-group">
+                                                    {% for lesson in module.lessons.all %}
+                                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                            <div>
+                                                                <strong>{{ forloop.counter }}.</strong> {{ lesson.title }}
+                                                                <small class="text-muted">({{ lesson.duration_minutes }} min)</small>
+                                                            </div>
+                                                            <a href="{% url 'courses:edit_lesson' course.slug lesson.id %}" 
+                                                               class="btn btn-sm btn-outline-secondary">Edit</a>
+                                                        </li>
+                                                    {% endfor %}
+                                                </ul>
+                                            {% else %}
+                                                <p class="text-muted">No lessons yet. Add your first lesson!</p>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted text-center py-4">
+                            No modules yet. Start by adding your first module!
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <!-- Actions Card -->
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Actions</h5>
+                    
+                    {% if not course.is_published %}
+                        <form method="post" action="{% url 'courses:publish_course' course.slug %}" class="mb-3">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-success w-100">Publish Course</button>
+                        </form>
+                        <p class="small text-muted">Make your course visible to students</p>
+                    {% else %}
+                        <form method="post" action="{% url 'courses:publish_course' course.slug %}" class="mb-3">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-warning w-100">Unpublish Course</button>
+                        </form>
+                        <p class="small text-muted">Hide your course from students</p>
+                    {% endif %}
+                    
+                    <hr>
+                    
+                    <a href="{% url 'courses:delete_course' course.slug %}" class="btn btn-danger w-100">
+                        Delete Course
+                    </a>
+                    <p class="small text-muted mt-2">This action cannot be undone</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

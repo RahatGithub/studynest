@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ lesson.title }} - StudyNest{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row">
+        <!-- Sidebar (keep as is) -->
+        <div class="col-lg-3 mb-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h6 class="mb-0">{{ course.title }}</h6>
+                    <small>{{ enrollment.get_progress_percentage }}% Complete</small>
+                </div>
+                <div class="card-body p-0">
+                    <div class="progress" style="height: 5px;">
+                        <div class="progress-bar" role="progressbar" 
+                             style="width: {{ enrollment.get_progress_percentage }}%"></div>
+                    </div>
+                    
+                    <div class="accordion accordion-flush" id="courseModules">
+                        {% for module in modules %}
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button {% if lesson.module != module %}collapsed{% endif %} py-2" 
+                                            type="button" data-bs-toggle="collapse" 
+                                            data-bs-target="#module{{ module.id }}">
+                                        <small>{{ module.title }}</small>
+                                    </button>
+                                </h2>
+                                <div id="module{{ module.id }}" 
+                                     class="accordion-collapse collapse {% if lesson.module == module %}show{% endif %}"
+                                     data-bs-parent="#courseModules">
+                                    <div class="accordion-body p-0">
+                                        <ul class="list-group list-group-flush">
+                                            {% for l in module.lessons.all %}
+                                                <li class="list-group-item {% if lesson == l %}active{% endif %} py-2">
+                                                    <a href="{% url 'courses:view_lesson' course.slug l.id %}" 
+                                                       class="text-decoration-none d-flex align-items-center">
+                                                        {% for prog in enrollment.progress_records.all %}
+                                                            {% if prog.lesson == l %}
+                                                                {% if prog.completed %}
+                                                                    <span class="text-success me-2">✓</span>
+                                                                {% else %}
+                                                                    <span class="text-muted me-2">○</span>
+                                                                {% endif %}
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                        <div class="flex-grow-1">
+                                                            <div class="text-truncate small">{{ l.title }}</div>
+                                                            <small class="text-muted">{{ l.duration_minutes }} min</small>
+                                                        </div>
+                                                    </a>
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="{% url 'courses:learn_course' course.slug %}" class="btn btn-sm btn-secondary w-100">
+                        Back to Course Overview
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Video Player -->
+        <div class="col-lg-9">
+            <div class="card">
+                <div class="card-body">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="{% url 'courses:learn_course' course.slug %}">{{ course.title }}</a></li>
+                            <li class="breadcrumb-item">{{ lesson.module.title }}</li>
+                            <li class="breadcrumb-item active">{{ lesson.title }}</li>
+                        </ol>
+                    </nav>
+                    
+                    <h2 class="h4 mb-3">{{ lesson.title }}</h2>
+                    
+                    <!-- Video Embed -->
+                    <div class="ratio ratio-16x9 mb-4 bg-dark">
+                        <iframe src="{{ lesson.get_youtube_embed_url }}" 
+                                title="{{ lesson.title }}"
+                                frameborder="0" 
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                                allowfullscreen>
+                        </iframe>
+                    </div>
+                    
+                    <!-- Lesson Info and Actions -->
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div>
+                            <span class="badge bg-secondary">{{ lesson.duration_minutes }} minutes</span>
+                            {% if progress.completed %}
+                                <span class="badge bg-success ms-2">
+                                    <i class="bi bi-check-circle-fill"></i> Completed
+                                </span>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Action Buttons -->
+                        <div>
+                            {% if not progress.completed %}
+                                <form method="post" class="d-inline">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="action" value="mark_complete_only">
+                                    <button type="submit" class="btn btn-outline-success">
+                                        <i class="bi bi-check-circle"></i> Mark as Complete
+                                    </button>
+                                </form>
+                                
+                                <!-- Check if there's a next lesson -->
+                                {% with has_next=False %}
+                                    {% for module in modules %}
+                                        {% for l in module.lessons.all %}
+                                            {% if module.order > lesson.module.order or module.order == lesson.module.order and l.order > lesson.order %}
+                                                {% if not has_next %}
+                                                    <form method="post" class="d-inline ms-2">
+                                                        {% csrf_token %}
+                                                        <input type="hidden" name="action" value="complete_and_next">
+                                                        <button type="submit" class="btn btn-primary">
+                                                            Complete & Next <i class="bi bi-arrow-right"></i>
+                                                        </button>
+                                                    </form>
+                                                {% endif %}
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endfor %}
+                                {% endwith %}
+                            {% else %}
+                                <span class="text-muted">
+                                    Completed on {{ progress.completed_at|date:"M d, Y" }}
+                                </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    {% if lesson.description %}
+                        <hr>
+                        <h5>About this lesson</h5>
+                        <p>{{ lesson.description|linebreaks }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

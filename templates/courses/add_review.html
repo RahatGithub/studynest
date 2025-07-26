@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Review - {{ course.title }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <h1 class="mb-4">Review: {{ course.title }}</h1>
+            
+            <div class="card">
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            {{ form.rating.label_tag }}
+                            {{ form.rating }}
+                            {% if form.rating.errors %}
+                                <div class="text-danger small">{{ form.rating.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.comment.label_tag }}
+                            {{ form.comment }}
+                            <small class="form-text text-muted">Share your learning experience</small>
+                            {% if form.comment.errors %}
+                                <div class="text-danger small">{{ form.comment.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">Submit Review</button>
+                            <a href="{% url 'courses:course_detail' course.slug %}" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

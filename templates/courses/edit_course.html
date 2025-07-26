@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Course - StudyNest{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <h1 class="mb-4">Edit Course: {{ course.title }}</h1>
+            
+            <div class="card">
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            {{ form.title.label_tag }}
+                            {{ form.title }}
+                            {% if form.title.errors %}
+                                <div class="text-danger small">{{ form.title.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.description.label_tag }}
+                            {{ form.description }}
+                            {% if form.description.errors %}
+                                <div class="text-danger small">{{ form.description.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form.category.label_tag }}
+                                {{ form.category }}
+                                {% if form.category.errors %}
+                                    <div class="text-danger small">{{ form.category.errors }}</div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                {{ form.course_type.label_tag }}
+                                {{ form.course_type }}
+                                {% if form.course_type.errors %}
+                                    <div class="text-danger small">{{ form.course_type.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3" id="price-field">
+                            {{ form.price.label_tag }}
+                            {{ form.price }}
+                            {% if form.price.errors %}
+                                <div class="text-danger small">{{ form.price.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.thumbnail.label_tag }}
+                            {% if course.thumbnail %}
+                                <div class="mb-2">
+                                    <img src="{{ course.thumbnail.url }}" alt="Current thumbnail" style="max-width: 200px;">
+                                    <p class="small text-muted">Current thumbnail</p>
+                                </div>
+                            {% endif %}
+                            {{ form.thumbnail }}
+                            <small class="form-text text-muted">Upload a new thumbnail to replace the current one</small>
+                            {% if form.thumbnail.errors %}
+                                <div class="text-danger small">{{ form.thumbnail.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger">
+                                {{ form.non_field_errors }}
+                            </div>
+                        {% endif %}
+                        
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">Update Course</button>
+                            <a href="{% url 'courses:manage_course_content' course.slug %}" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Show/hide price field based on course type
+    document.getElementById('course-type').addEventListener('change', function() {
+        const priceField = document.getElementById('price-field');
+        if (this.value === 'paid') {
+            priceField.style.display = 'block';
+        } else {
+            priceField.style.display = 'none';
+        }
+    });
+    
+    // Initial check
+    if (document.getElementById('course-type').value === 'free') {
+        document.getElementById('price-field').style.display = 'none';
+    }
+</script>
+{% endblock %}

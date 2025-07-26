@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Lesson - StudyNest{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <h1 class="mb-4">Add Lesson to: {{ module.title }}</h1>
+            <p class="text-muted">Course: {{ course.title }}</p>
+            
+            <div class="card">
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            {{ form.title.label_tag }}
+                            {{ form.title }}
+                            {% if form.title.errors %}
+                                <div class="text-danger small">{{ form.title.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.description.label_tag }}
+                            {{ form.description }}
+                            {% if form.description.errors %}
+                                <div class="text-danger small">{{ form.description.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.video_url.label_tag }}
+                            {{ form.video_url }}
+                            <small class="form-text text-muted">Enter a YouTube video URL</small>
+                            {% if form.video_url.errors %}
+                                <div class="text-danger small">{{ form.video_url.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form.duration_minutes.label_tag }}
+                                {{ form.duration_minutes }}
+                                {% if form.duration_minutes.errors %}
+                                    <div class="text-danger small">{{ form.duration_minutes.errors }}</div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                {{ form.order.label_tag }}
+                                {{ form.order }}
+                                <small class="form-text text-muted">Lower numbers appear first</small>
+                                {% if form.order.errors %}
+                                    <div class="text-danger small">{{ form.order.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">Add Lesson</button>
+                            <a href="{% url 'courses:manage_course_content' course.slug %}" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}Delete Course - StudyNest{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0">Delete Course</h4>
+                </div>
+                <div class="card-body">
+                    <h5>Are you sure you want to delete "{{ course.title }}"?</h5>
+                    
+                    <div class="alert alert-warning mt-3">
+                        <strong>Warning!</strong> This action cannot be undone. This will permanently delete:
+                        <ul class="mb-0 mt-2">
+                            <li>The course and all its content</li>
+                            <li>All {{ course.modules.count }} modules</li>
+                            <li>All lessons and videos</li>
+                            <li>All student enrollments ({{ course.get_enrolled_students_count }} students)</li>
+                            <li>All reviews and ratings</li>
+                        </ul>
+                    </div>
+                    
+                    <form method="post" class="mt-4">
+                        {% csrf_token %}
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-danger">Yes, Delete Course</button>
+                            <a href="{% url 'courses:manage_course_content' course.slug %}" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

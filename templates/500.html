@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Server Error - StudyNest{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 text-center">
+            <h1 class="display-1">500</h1>
+            <h2 class="mb-4">Server Error</h2>
+            <p class="mb-4">Sorry, something went wrong on our end.</p>
+            <a href="{% url 'courses:home' %}" class="btn btn-primary">Go to Homepage</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

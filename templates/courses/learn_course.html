@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ course.title }} - StudyNest{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-lg-3 mb-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Course Content</h5>
+                    <small>{{ enrollment.get_progress_percentage }}% Complete</small>
+                </div>
+                <div class="card-body p-0">
+                    <div class="progress" style="height: 5px;">
+                        <div class="progress-bar" role="progressbar" 
+                             style="width: {{ enrollment.get_progress_percentage }}%"></div>
+                    </div>
+                    
+                    <div class="accordion accordion-flush" id="courseModules">
+                        {% for module in modules %}
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button {% if not current_lesson or current_lesson.module != module %}collapsed{% endif %}" 
+                                            type="button" data-bs-toggle="collapse" 
+                                            data-bs-target="#module{{ module.id }}">
+                                        <small class="me-2">Module {{ forloop.counter }}</small>
+                                        <span class="text-truncate">{{ module.title }}</span>
+                                    </button>
+                                </h2>
+                                <div id="module{{ module.id }}" 
+                                     class="accordion-collapse collapse {% if current_lesson and current_lesson.module == module %}show{% endif %}"
+                                     data-bs-parent="#courseModules">
+                                    <div class="accordion-body p-0">
+                                        <ul class="list-group list-group-flush">
+                                            {% for lesson in module.lessons.all %}
+                                                <li class="list-group-item {% if current_lesson == lesson %}active{% endif %}">
+                                                    <a href="{% url 'courses:view_lesson' course.slug lesson.id %}" 
+                                                    class="text-decoration-none d-flex align-items-center">
+                                                        {% for prog in enrollment.progress_records.all %}
+                                                            {% if prog.lesson == lesson %}
+                                                                {% if prog.completed %}
+                                                                    <span class="text-success me-2">✓</span>
+                                                                {% else %}
+                                                                    <span class="text-muted me-2">○</span>
+                                                                {% endif %}
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                        <div class="flex-grow-1">
+                                                            <div class="text-truncate">{{ lesson.title }}</div>
+                                                            <small class="text-muted">{{ lesson.duration_minutes }} min</small>
+                                                        </div>
+                                                    </a>
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="col-lg-9">
+            <div class="card">
+                <div class="card-body">
+                    <h1 class="h3 mb-3">{{ course.title }}</h1>
+                    <p class="text-muted">Instructor: {{ course.tutor.username }}</p>
+                    
+                    {% if current_lesson %}
+                        <div class="alert alert-info">
+                            <h5>Current Lesson: {{ current_lesson.title }}</h5>
+                            <p class="mb-2">{{ current_lesson.description }}</p>
+                            <a href="{% url 'courses:view_lesson' course.slug current_lesson.id %}" 
+                               class="btn btn-primary">Start Lesson</a>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-warning">
+                            <h5>No lessons available</h5>
+                            <p>This course doesn't have any lessons yet.</p>
+                        </div>
+                    {% endif %}
+                    
+                    <hr>
+                    
+                    <h4>Course Overview</h4>
+                    <p>{{ course.description|linebreaks }}</p>
+                    
+                    {% if enrollment.completed %}
+                        <div class="alert alert-success mt-4">
+                            <h5>🎉 Congratulations!</h5>
+                            <p>You have successfully completed this course!</p>
+                            <p class="mb-0">Completed on: {{ enrollment.completed_at|date:"F d, Y" }}</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

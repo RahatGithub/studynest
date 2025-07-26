@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% block title %}Student Dashboard - StudyNest{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="mb-4">My Learning Dashboard</h1>
+    
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Enrolled Courses</h5>
+                    <p class="display-4 mb-0">{{ enrollments.count }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Completed Courses</h5>
+                    <p class="display-4 mb-0">{{ completed_count }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <h5 class="card-title">In Progress</h5>
+                    <p class="display-4 mb-0">{{ in_progress_count }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <h2 class="mb-3">My Courses</h2>
+    
+    {% if enrollments %}
+        <div class="row g-4">
+            {% for enrollment in enrollments %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100">
+                        {% if enrollment.course.thumbnail %}
+                            <img src="{{ enrollment.course.thumbnail.url }}" class="card-img-top" 
+                                 alt="{{ enrollment.course.title }}" style="height: 200px; object-fit: cover;">
+                        {% else %}
+                            <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center" 
+                                 style="height: 200px;">
+                                <span class="text-white">No Image</span>
+                            </div>
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ enrollment.course.title }}</h5>
+                            <p class="text-muted small">by {{ enrollment.course.tutor.username }}</p>
+                            
+                            <!-- Progress Bar -->
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <small>Progress</small>
+                                    <small>{{ enrollment.get_progress_percentage }}%</small>
+                                </div>
+                                <div class="progress">
+                                    <div class="progress-bar {% if enrollment.completed %}bg-success{% endif %}" 
+                                         role="progressbar" 
+                                         style="width: {{ enrollment.get_progress_percentage }}%"></div>
+                                </div>
+                            </div>
+                            
+                            <!-- Status Badge -->
+                            {% if enrollment.completed %}
+                                <span class="badge bg-success mb-2">
+                                    <i class="bi bi-check-circle-fill"></i> Completed
+                                </span>
+                            {% else %}
+                                <span class="badge bg-primary mb-2">In Progress</span>
+                            {% endif %}
+                            
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">
+                                    {% if enrollment.completed %}
+                                        Completed {{ enrollment.completed_at|date:"M d, Y" }}
+                                    {% else %}
+                                        Enrolled {{ enrollment.enrolled_at|date:"M d, Y" }}
+                                    {% endif %}
+                                </small>
+                                <a href="{% url 'courses:learn_course' enrollment.course.slug %}" class="btn btn-primary btn-sm">
+                                    {% if enrollment.completed %}View{% else %}Continue{% endif %}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            <h5 class="alert-heading">No courses yet!</h5>
+            <p>You haven't enrolled in any courses. Start learning today!</p>
+            <hr>
+            <a href="{% url 'courses:course_list' %}" class="btn btn-primary">Browse Courses</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
