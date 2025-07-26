@@ -113,25 +113,16 @@
                                         <i class="bi bi-check-circle"></i> Mark as Complete
                                     </button>
                                 </form>
-                                
-                                <!-- Check if there's a next lesson -->
-                                {% with has_next=False %}
-                                    {% for module in modules %}
-                                        {% for l in module.lessons.all %}
-                                            {% if module.order > lesson.module.order or module.order == lesson.module.order and l.order > lesson.order %}
-                                                {% if not has_next %}
-                                                    <form method="post" class="d-inline ms-2">
-                                                        {% csrf_token %}
-                                                        <input type="hidden" name="action" value="complete_and_next">
-                                                        <button type="submit" class="btn btn-primary">
-                                                            Complete & Next <i class="bi bi-arrow-right"></i>
-                                                        </button>
-                                                    </form>
-                                                {% endif %}
-                                            {% endif %}
-                                        {% endfor %}
-                                    {% endfor %}
-                                {% endwith %}
+                                <!-- Check if there is any next lesson -->
+                                {% if next_lesson %}
+                                    <form method="post" class="d-inline ms-2">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="action" value="complete_and_next">
+                                        <button type="submit" class="btn btn-primary">
+                                            Complete & Next <i class="bi bi-arrow-right"></i>
+                                        </button>
+                                    </form>
+                                {% endif %}
                             {% else %}
                                 <span class="text-muted">
                                     Completed on {{ progress.completed_at|date:"M d, Y" }}

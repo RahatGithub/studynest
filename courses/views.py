@@ -385,12 +385,29 @@ def view_lesson(request, slug, lesson_id):
             # For mark_complete_only, stay on the same page
             return redirect('courses:view_lesson', slug=course.slug, lesson_id=lesson.id)
     
+    
+    # Check if there's any next lesson
+    next_lesson = None
+    found_current = False
+
+    for module in course.modules.all().order_by('order'):
+        for l in module.lessons.all().order_by('order'):
+            if found_current:
+                next_lesson = l
+                break
+            if l.id == lesson.id:
+                found_current = True
+        if next_lesson:
+            break
+
+
     context = {
         'course': course,
         'enrollment': enrollment,
         'lesson': lesson,
         'progress': progress,
         'modules': course.modules.all().order_by('order'),
+        'next_lesson': next_lesson, 
     }
     return render(request, 'courses/view_lesson.html', context)
 
