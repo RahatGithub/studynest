@@ -11,7 +11,7 @@
                     <h2 class="text-center mb-4">Sign Up as Student</h2>
                     <p class="text-center text-muted mb-4">Learn from experts across the world</p>
                     
-                    <form method="post">
+                    <form method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         
                         {% if form.non_field_errors %}
@@ -36,6 +36,14 @@
                             {% endif %}
                         </div>
                         
+                        <div class="mb-3">
+                            <label for="{{ form.profile_picture.id_for_label }}" class="form-label">Profile Picture (Optional)</label>
+                            {{ form.profile_picture }}
+                            <small class="form-text text-muted">Upload a profile picture (JPG, PNG)</small>
+                            {% if form.profile_picture.errors %}
+                            <div class="text-danger small">{{ form.profile_picture.errors }}</div>
+                            {% endif %}
+                        </div>
                         
                         <div class="mb-3">
                             {{ form.password1.label_tag }}

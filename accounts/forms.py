@@ -7,10 +7,17 @@ class StudentSignUpForm(UserCreationForm):
         'class': 'form-control',
         'placeholder': 'Enter your email'
     }))
+    profile_picture = forms.ImageField(
+        required=False,
+        widget=forms.FileInput(attrs={
+            'class': 'form-control',
+            'accept': 'image/*'
+        })
+    )
     
     class Meta:
         model = User
-        fields = ('username', 'email', 'password1', 'password2')
+        fields = ('username', 'email', 'profile_picture', 'password1', 'password2')
         widgets = {
             'username': forms.TextInput(attrs={
                 'class': 'form-control',
@@ -36,6 +43,8 @@ class StudentSignUpForm(UserCreationForm):
             user.save()
         return user
 
+        
+
 class TutorSignUpForm(UserCreationForm):
     email = forms.EmailField(required=True, widget=forms.EmailInput(attrs={
         'class': 'form-control',
@@ -49,10 +58,17 @@ class TutorSignUpForm(UserCreationForm):
             'placeholder': 'Tell us about yourself and your expertise'
         })
     )
+    profile_picture = forms.ImageField(
+        required=False,
+        widget=forms.FileInput(attrs={
+            'class': 'form-control',
+            'accept': 'image/*'
+        })
+    )
     
     class Meta:
         model = User
-        fields = ('username', 'email', 'bio', 'password1', 'password2')
+        fields = ('username', 'email', 'bio', 'profile_picture', 'password1', 'password2')
         widgets = {
             'username': forms.TextInput(attrs={
                 'class': 'form-control',

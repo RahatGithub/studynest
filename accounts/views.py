@@ -21,7 +21,7 @@ def signup_student(request):
         return redirect('courses:dashboard')
     
     if request.method == 'POST':
-        form = StudentSignUpForm(request.POST)
+        form = StudentSignUpForm(request.POST, request.FILES)
         if form.is_valid():
             user = form.save()
             login(request, user)
@@ -37,7 +37,7 @@ def signup_tutor(request):
         return redirect('courses:dashboard')
     
     if request.method == 'POST':
-        form = TutorSignUpForm(request.POST)
+        form = TutorSignUpForm(request.POST, request.FILES)
         if form.is_valid():
             user = form.save()
             login(request, user)

@@ -19,10 +19,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Security settings
 SECRET_KEY = config('SECRET_KEY')
-# DEBUG = config('DEBUG', default=False, cast=bool)
-DEBUG = False 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '*']
-# ALLOWED_HOSTS = []
+# DEBUG = False 
+DEBUG = True 
+# ALLOWED_HOSTS = ['localhost', '127.0.0.1', '*']
+ALLOWED_HOSTS = []
 
 # Application definition
 INSTALLED_APPS = [
