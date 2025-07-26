@@ -19,4 +19,4 @@ class User(AbstractUser):
         return self.role == 'tutor'
     
     class Meta:
-        db_table = 'users'
+        db_table = 'users' 

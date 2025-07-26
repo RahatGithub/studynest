@@ -142,7 +142,7 @@
                             {% else %}
                                 <form method="post" action="#">
                                     {% csrf_token %}
-                                    <button type="submit" class="btn btn-primary w-100">Enroll for ${{ course.price }}</button>
+                                    <button type="submit" class="btn btn-primary w-100">Enroll for BDT {{ course.price }}</button>
                                 </form>
                             {% endif %}
                         {% elif user.is_tutor %}
