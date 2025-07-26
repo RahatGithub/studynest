@@ -17,12 +17,18 @@ class StudentSignUpForm(UserCreationForm):
     
     class Meta:
         model = User
-        fields = ('username', 'email', 'profile_picture', 'password1', 'password2')
+        # fields = ('username', 'email', 'profile_picture', 'password1', 'password2')
+        fields = ('first_name', 'last_name', 'username', 'email', 'profile_picture', 'password1', 'password2')
+        # widgets = {
+        #     'username': forms.TextInput(attrs={
+        #         'class': 'form-control',
+        #         'placeholder': 'Choose a username'
+        #     }),
+        # }
         widgets = {
-            'username': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Choose a username'
-            }),
+            'username': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Choose a username'}),
+            'first_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'First name'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Last name'}),
         }
     
     def __init__(self, *args, **kwargs):
@@ -35,6 +41,8 @@ class StudentSignUpForm(UserCreationForm):
             'class': 'form-control',
             'placeholder': 'Confirm password'
         })
+        self.fields['first_name'].required = False # EXPERIMENT: added later 
+        self.fields['last_name'].required = False  # EXPERIMENT: added later 
     
     def save(self, commit=True):
         user = super().save(commit=False)
