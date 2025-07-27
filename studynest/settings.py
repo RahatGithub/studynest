@@ -13,16 +13,15 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 from decouple import config
 import os
+import dj_database_url
 
 # Build paths inside the project
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Security settings
 SECRET_KEY = config('SECRET_KEY')
-# DEBUG = False 
-DEBUG = True 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '*']
-# ALLOWED_HOSTS = []
+DEBUG = config('DEBUG', default=False, cast=bool)
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '*.railway.app']
 
 # Application definition
 INSTALLED_APPS = [
@@ -78,6 +77,10 @@ DATABASES = {
     }
 }
 
+# Use PostgreSQL in production if DATABASE_URL is provided
+if 'DATABASE_URL' in os.environ:
+    DATABASES['default'] = dj_database_url.parse(os.environ.get('DATABASE_URL'))
+
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -123,3 +126,8 @@ LOGOUT_REDIRECT_URL = 'courses:home'
 # Stripe settings
 STRIPE_PUBLISHABLE_KEY = config('STRIPE_PUBLISHABLE_KEY')
 STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY')
+
+# Railway specific settings
+if 'RAILWAY_ENVIRONMENT' in os.environ:
+    DEBUG = False
+    ALLOWED_HOSTS = ['*']
