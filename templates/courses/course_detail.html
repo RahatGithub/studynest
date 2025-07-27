@@ -142,8 +142,29 @@
                                         Enroll for BDT {{ course.price }}
                                     </button>
                                 </form>
+
+                                <!-- Info button to toggle payment instructions -->
+                                <div class="text-center mt-2">
+                                    <a class="text-decoration-none small" data-bs-toggle="collapse" href="#paymentInstructions" role="button" aria-expanded="false" aria-controls="paymentInstructions">
+                                        <i class="bi bi-info-circle text-danger me-1"></i><span class="text-danger"> Check payment instructions first</span>
+                                    </a>
+                                </div>
+                                <div class="collapse mt-2" id="paymentInstructions">
+                                    <div class="alert alert-info small mb-0">
+                                        <p>This is a dummy payment system for preview purpose. Proceed and use this info for a successful payment.</p>
+                                            <ul>
+                                                <li>
+                                                    Card no: <span id="cardNumber" class="user-select-all">4242 4242 4242 4242</span>
+                                                    <i class="bi bi-copy btn" onclick="copyCardNumber()"></i>
+                                                </li>
+                                                <li>CVC: Any 3-digit number</li>
+                                                <li>Email: Any email address</li>
+                                            </ul>
+                                    </div>
+                                </div>
+
                                 <p class="text-muted small text-center mt-2">
-                                    <i class="bi bi-lock"></i> Secure payment via Stripe
+                                    <i class="bi bi-lock"></i> Secured payment via Stripe
                                 </p>
                             {% endif %}
                             </h5>
@@ -161,9 +182,9 @@
                             <a href="{% url 'accounts:signup_student' %}">Sign up</a>
                         </p>
                     {% endif %}
-                    
+
                     <hr>
-                    
+
                     <h6>This course includes:</h6>
                     <ul class="list-unstyled">
                         <li class="mb-2">
@@ -192,4 +213,18 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script>
+    function copyCardNumber() {
+        const cardNumber = document.getElementById("cardNumber").innerText;
+        navigator.clipboard.writeText(cardNumber).then(() => {
+            alert("Card number copied!");
+        });
+    }
+</script>
+
 {% endblock %}

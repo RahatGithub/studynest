@@ -43,7 +43,7 @@ def create_checkout_session(request, slug):
                     'currency': 'usd',
                     'product_data': {
                         'name': course.title,
-                        'description': f'Enrollment in {course.title} by {course.tutor.username} (BDT {course.price})',
+                        'description': f'Use 4242 4242 4242 4242 as card number and any 3-digit number as CVC. Enrollment in {course.title} by {course.tutor.username}',
                     },
                     # Convert BDT price to USD for Stripe processing
                     'unit_amount': convert_bdt_to_usd(course.price),  # Convert BDT to USD cents
