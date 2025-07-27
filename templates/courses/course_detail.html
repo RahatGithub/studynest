@@ -56,7 +56,9 @@
                                                         <i class="bi bi-play-circle me-2"></i>
                                                         {{ lesson.title }}
                                                     </span>
+                                                    {% if lesson.duration_minutes %}
                                                     <span class="text-muted small">{{ lesson.duration_minutes }} min</span>
+                                                    {% endif %}
                                                 </li>
                                             {% endfor %}
                                         </ul>
@@ -86,7 +88,22 @@
                         {% for review in reviews %}
                             <div class="border-bottom pb-3 mb-3">
                                 <div class="d-flex justify-content-between">
-                                    <strong>{{ review.student.username }}</strong>
+                                    <div class="row align-items-center">
+                                        <div class="col-auto">
+                                            {% if review.student.profile_picture %}
+                                                <img src="{{ review.student.profile_picture.url }}" alt="Profile" 
+                                                    class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
+                                            {% else %}
+                                                <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center" 
+                                                    style="width: 40px; height: 40px;">
+                                                    <span class="text-white fs-3">{{ review.student.username|first|upper }}</span>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="col">
+                                            <p class="mb-1"><strong>{{ review.student.username }}</strong></p>
+                                        </div>
+                                    </div>
                                     <small class="text-muted">{{ review.created_at|date:"M d, Y" }}</small>
                                 </div>
                                 <div class="text-warning mb-2">

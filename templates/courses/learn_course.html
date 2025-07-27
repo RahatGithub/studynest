@@ -97,6 +97,14 @@
                             <p class="mb-0">Completed on: {{ enrollment.completed_at|date:"F d, Y" }}</p>
                         </div>
                     {% endif %}
+
+                    {% if enrollment %}
+                    {% comment %} {% if user.is_authenticated and user.is_student and is_enrolled and not has_reviewed %} {% endcomment %}
+                            <a href="{% url 'courses:add_review' course.slug %}" class="btn btn-lg btn-primary">
+                                Add Review
+                            </a>
+                        {% comment %} {% endif %} {% endcomment %}
+                    {% endif %}
                 </div>
             </div>
         </div>

@@ -12,6 +12,11 @@ from .models import Payment
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
+def convert_bdt_to_usd(bdt_amount):
+    USD_TO_BDT_RATE = 120  # 1 USD = 120 BDT (update as needed)
+    usd_cents = int((bdt_amount / USD_TO_BDT_RATE) * 100)
+    return usd_cents
+
 @login_required
 def create_checkout_session(request, slug):
     if not request.user.is_student():
@@ -38,21 +43,25 @@ def create_checkout_session(request, slug):
                     'currency': 'usd',
                     'product_data': {
                         'name': course.title,
-                        'description': f'Enrollment in {course.title} by {course.tutor.username}',
+                        'description': f'Enrollment in {course.title} by {course.tutor.username} (BDT {course.price})',
                     },
-                    'unit_amount': int(course.price * 100),  # Stripe expects cents
+                    # Convert BDT price to USD for Stripe processing
+                    'unit_amount': convert_bdt_to_usd(course.price),  # Convert BDT to USD cents
                 },
                 'quantity': 1,
             }],
             mode='payment',
-            success_url=success_url + '&session_id={CHECKOUT_SESSION_ID}',  # Stripe will replace this
+            success_url=success_url + '&session_id={CHECKOUT_SESSION_ID}',
             cancel_url=request.build_absolute_uri(
                 reverse('courses:course_detail', args=[slug])
             ),
             metadata={
                 'course_id': course.id,
                 'student_id': request.user.id,
-            }
+            },
+            # Force USD display to avoid double conversion
+            locale='en',
+            customer_creation='if_required',
         )
         
         return redirect(checkout_session.url, code=303)
