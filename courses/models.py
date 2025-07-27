@@ -55,11 +55,16 @@ class Course(models.Model):
     def get_enrolled_students_count(self):
         return self.enrollments.count()
     
+    def get_reviews_count(self): 
+        return self.reviews.count() 
+    
     def get_average_rating(self):
         reviews = self.reviews.all()
         if reviews:
-            return sum([review.rating for review in reviews]) / len(reviews)
+            avg = sum([review.rating for review in reviews]) / len(reviews)
+            return round(avg, 1)
         return 0
+
 
 class Module(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='modules')

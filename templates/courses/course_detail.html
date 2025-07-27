@@ -8,11 +8,18 @@
         <!-- Course Info -->
         <div class="col-lg-8">
             <h1 class="mb-3">{{ course.title }}</h1>
-            <p class="text-muted mb-3">
-                Instructor: <strong>{{ course.tutor.username }}</strong> | 
-                Category: <strong>{{ course.category.name }}</strong> |
-                Enrolled: <strong>{{ course.get_enrolled_students_count }}</strong>
-            </p>
+            <div class="mb-3">
+                <span class="text-muted">Instructor: <strong>{{ course.tutor.username }}</strong> </span> | 
+                <span class="text-muted">Category: <strong>{{ course.category.name }}</strong> </span> |
+                <span class="text-muted">Enrolled: <strong>{{ course.get_enrolled_students_count }}</strong> </span> |
+                <span class="text-muted">
+                    {% if course.course_type == 'paid' %}
+                        Price: <strong>BDT {{ course.price }}</strong>
+                    {% elif course.course_type == 'free' %}
+                        <span class="badge bg-success">Free course</span>
+                    {% endif %}
+                </span>
+            </div>
             
             {% if course.thumbnail %}
                 <img src="{{ course.thumbnail.url }}" class="img-fluid rounded mb-4" alt="{{ course.title }}">
@@ -127,8 +134,12 @@
                 <div class="card-body">
                     {% if user.is_authenticated %}
                         {% if is_enrolled %}
-                            <a href="{% url 'courses:learn_course' course.slug %}" class="btn btn-success w-100 mb-3">Continue Learning</a>
-                            <p class="text-muted small text-center">You are enrolled in this course</p>
+                            {% if has_completed %}
+                                <a href="#" class="btn btn-info w-100 mb-3">Completed!</a>
+                            {% else %}
+                                <a href="{% url 'courses:learn_course' course.slug %}" class="btn btn-success w-100 mb-3">Continue Learning</a>
+                                <p class="text-muted small text-center">You are enrolled in this course</p>
+                            {% endif %}
                         {% elif user.is_student %}
                             <h5 class="card-title">
                             {% if course.course_type == 'free' %}
@@ -170,7 +181,7 @@
                             </h5>
                         {% elif user.is_tutor %}
                             {% if user == course.tutor %}
-                                <a href="#" class="btn btn-warning w-100 mb-2">Edit Course</a>
+                                <a href={% url 'courses:edit_course' course.slug %} class="btn btn-warning w-100 mb-2">Edit Course</a>
                             {% else %}
                                 <p class="text-muted text-center">Tutors cannot enroll in courses</p>
                             {% endif %}

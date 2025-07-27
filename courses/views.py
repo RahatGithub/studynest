@@ -64,17 +64,21 @@ def course_detail(request, slug):
     # Check if user is enrolled
     is_enrolled = False
     has_reviewed = False
+    has_completed = False 
     
     if request.user.is_authenticated:
-        is_enrolled = Enrollment.objects.filter(student=request.user, course=course).exists()
-        if request.user.is_student():
-            has_reviewed = Review.objects.filter(student=request.user, course=course).exists()
+        if request.user.is_student():  
+            is_enrolled = Enrollment.objects.filter(student=request.user, course=course).exists()
+            if is_enrolled: 
+                has_completed = Enrollment.objects.filter(student=request.user, course=course)[0].completed
+                has_reviewed = Review.objects.filter(student=request.user, course=course).exists()
     
     context = {
         'course': course,
         'modules': modules,
         'reviews': reviews,
         'is_enrolled': is_enrolled,
+        'has_completed': has_completed,
         'avg_rating': avg_rating,
         'has_reviewed': has_reviewed,
     }
