@@ -7,48 +7,49 @@
     <div class="row">
         <!-- Sidebar -->
         <div class="col-lg-3 mb-4">
-            <div class="card">
-                <div class="card-header bg-primary text-white">
+            <div class="card shadow-sm">
+                <div class="card-header bg-dark text-white">
                     <h5 class="mb-0">Course Content</h5>
-                    <small>{{ enrollment.get_progress_percentage }}% Complete</small>
+                    <small class="text-light opacity-75">{{ enrollment.get_progress_percentage }}% Complete</small>
                 </div>
                 <div class="card-body p-0">
-                    <div class="progress" style="height: 5px;">
-                        <div class="progress-bar" role="progressbar" 
-                             style="width: {{ enrollment.get_progress_percentage }}%"></div>
+                    <div class="progress" style="height: 6px;">
+                        <div class="progress-bar bg-success" role="progressbar" 
+                            style="width: {{ enrollment.get_progress_percentage }}%"></div>
                     </div>
                     
                     <div class="accordion accordion-flush" id="courseModules">
                         {% for module in modules %}
-                            <div class="accordion-item">
+                            <div class="accordion-item border-0">
                                 <h2 class="accordion-header">
-                                    <button class="accordion-button {% if not current_lesson or current_lesson.module != module %}collapsed{% endif %}" 
+                                    <button class="accordion-button {% if not current_lesson or current_lesson.module != module %}collapsed{% endif %} bg-light text-dark border-bottom" 
                                             type="button" data-bs-toggle="collapse" 
-                                            data-bs-target="#module{{ module.id }}">
-                                        <small class="me-2">Module {{ forloop.counter }}</small>
-                                        <span class="text-truncate">{{ module.title }}</span>
+                                            data-bs-target="#module{{ module.id }}"
+                                            style="box-shadow: none;">
+                                        <small class="me-2 badge bg-secondary">Module {{ forloop.counter }}</small>
+                                        <span class="text-truncate fw-medium">{{ module.title }}</span>
                                     </button>
                                 </h2>
                                 <div id="module{{ module.id }}" 
-                                     class="accordion-collapse collapse {% if current_lesson and current_lesson.module == module %}show{% endif %}"
-                                     data-bs-parent="#courseModules">
+                                    class="accordion-collapse collapse {% if current_lesson and current_lesson.module == module %}show{% endif %}"
+                                    data-bs-parent="#courseModules">
                                     <div class="accordion-body p-0">
                                         <ul class="list-group list-group-flush">
                                             {% for lesson in module.lessons.all %}
-                                                <li class="list-group-item {% if current_lesson == lesson %}active{% endif %}">
+                                                <li class="list-group-item {% if current_lesson == lesson %}bg-info bg-opacity-10 border-start border-info border-3{% endif %} border-0">
                                                     <a href="{% url 'courses:view_lesson' course.slug lesson.id %}" 
-                                                    class="text-decoration-none d-flex align-items-center">
+                                                    class="text-decoration-none d-flex align-items-center text-dark">
                                                         {% for prog in enrollment.progress_records.all %}
                                                             {% if prog.lesson == lesson %}
                                                                 {% if prog.completed %}
-                                                                    <span class="text-success me-2">✓</span>
+                                                                    <span class="text-success me-2 fs-5">✓</span>
                                                                 {% else %}
-                                                                    <span class="text-muted me-2">○</span>
+                                                                    <span class="text-muted me-2 fs-5">○</span>
                                                                 {% endif %}
                                                             {% endif %}
                                                         {% endfor %}
                                                         <div class="flex-grow-1">
-                                                            <div class="text-truncate">{{ lesson.title }}</div>
+                                                            <div class="text-truncate {% if current_lesson == lesson %}fw-medium text-info{% endif %}">{{ lesson.title }}</div>
                                                             <small class="text-muted">{{ lesson.duration_minutes }} min</small>
                                                         </div>
                                                     </a>
@@ -99,11 +100,9 @@
                     {% endif %}
 
                     {% if enrollment %}
-                    {% comment %} {% if user.is_authenticated and user.is_student and is_enrolled and not has_reviewed %} {% endcomment %}
                             <a href="{% url 'courses:add_review' course.slug %}" class="btn btn-lg btn-primary">
                                 Add Review
                             </a>
-                        {% comment %} {% endif %} {% endcomment %}
                     {% endif %}
                 </div>
             </div>

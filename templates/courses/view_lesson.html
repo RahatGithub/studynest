@@ -5,49 +5,50 @@
 {% block content %}
 <div class="container-fluid py-4">
     <div class="row">
-        <!-- Sidebar (keep as is) -->
+        <!-- Sidebar -->
         <div class="col-lg-3 mb-4">
-            <div class="card">
-                <div class="card-header bg-primary text-white">
+            <div class="card shadow-sm">
+                <div class="card-header bg-dark text-white">
                     <h6 class="mb-0">{{ course.title }}</h6>
-                    <small>{{ enrollment.get_progress_percentage }}% Complete</small>
+                    <small class="text-light opacity-75">{{ enrollment.get_progress_percentage }}% Complete</small>
                 </div>
                 <div class="card-body p-0">
-                    <div class="progress" style="height: 5px;">
-                        <div class="progress-bar" role="progressbar" 
-                             style="width: {{ enrollment.get_progress_percentage }}%"></div>
+                    <div class="progress" style="height: 6px;">
+                        <div class="progress-bar bg-success" role="progressbar" 
+                            style="width: {{ enrollment.get_progress_percentage }}%"></div>
                     </div>
                     
                     <div class="accordion accordion-flush" id="courseModules">
                         {% for module in modules %}
-                            <div class="accordion-item">
+                            <div class="accordion-item border-0">
                                 <h2 class="accordion-header">
-                                    <button class="accordion-button {% if lesson.module != module %}collapsed{% endif %} py-2" 
+                                    <button class="accordion-button {% if lesson.module != module %}collapsed{% endif %} py-2 bg-light text-dark border-bottom" 
                                             type="button" data-bs-toggle="collapse" 
-                                            data-bs-target="#module{{ module.id }}">
-                                        <small>{{ module.title }}</small>
+                                            data-bs-target="#module{{ module.id }}"
+                                            style="box-shadow: none;">
+                                        <small class="fw-medium">{{ module.title }}</small>
                                     </button>
                                 </h2>
                                 <div id="module{{ module.id }}" 
-                                     class="accordion-collapse collapse {% if lesson.module == module %}show{% endif %}"
-                                     data-bs-parent="#courseModules">
+                                    class="accordion-collapse collapse {% if lesson.module == module %}show{% endif %}"
+                                    data-bs-parent="#courseModules">
                                     <div class="accordion-body p-0">
                                         <ul class="list-group list-group-flush">
                                             {% for l in module.lessons.all %}
-                                                <li class="list-group-item {% if lesson == l %}active{% endif %} py-2">
+                                                <li class="list-group-item {% if lesson == l %}bg-info bg-opacity-10 border-start border-info border-3{% endif %} py-2 border-0">
                                                     <a href="{% url 'courses:view_lesson' course.slug l.id %}" 
-                                                       class="text-decoration-none d-flex align-items-center">
+                                                    class="text-decoration-none d-flex align-items-center text-dark">
                                                         {% for prog in enrollment.progress_records.all %}
                                                             {% if prog.lesson == l %}
                                                                 {% if prog.completed %}
-                                                                    <span class="text-success me-2">✓</span>
+                                                                    <span class="text-success me-2 fs-5">✓</span>
                                                                 {% else %}
-                                                                    <span class="text-muted me-2">○</span>
+                                                                    <span class="text-muted me-2 fs-5">○</span>
                                                                 {% endif %}
                                                             {% endif %}
                                                         {% endfor %}
                                                         <div class="flex-grow-1">
-                                                            <div class="text-truncate small">{{ l.title }}</div>
+                                                            <div class="text-truncate small {% if lesson == l %}fw-medium text-info{% endif %}">{{ l.title }}</div>
                                                             <small class="text-muted">{{ l.duration_minutes }} min</small>
                                                         </div>
                                                     </a>
@@ -60,8 +61,8 @@
                         {% endfor %}
                     </div>
                 </div>
-                <div class="card-footer">
-                    <a href="{% url 'courses:learn_course' course.slug %}" class="btn btn-sm btn-secondary w-100">
+                <div class="card-footer bg-light">
+                    <a href="{% url 'courses:learn_course' course.slug %}" class="btn btn-sm btn-outline-secondary w-100">
                         Back to Course Overview
                     </a>
                 </div>
