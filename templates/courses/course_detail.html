@@ -167,6 +167,9 @@
                                                 <li>
                                                     Card no: <span id="cardNumber" class="user-select-all">4242 4242 4242 4242</span>
                                                     <i class="bi bi-copy btn" onclick="copyCardNumber()"></i>
+                                                    {% comment %} Card number: 
+                                                    <span id="cardNumber" class="user-select-all">4242 4242 4242 4242</span>
+                                                    <button class="btn btn-sm btn-outline-secondary ms-2" onclick="copyCardNumber()">Copy</button> {% endcomment %}
                                                 </li>
                                                 <li>CVC: Any 3-digit number</li>
                                                 <li>Email: Any email address</li>
@@ -231,11 +234,36 @@
 
 <script>
     function copyCardNumber() {
-        const cardNumber = document.getElementById("cardNumber").innerText;
-        navigator.clipboard.writeText(cardNumber).then(() => {
-            alert("Card number copied!");
-        });
+        const text = document.getElementById("cardNumber").innerText;
+
+        if (navigator.clipboard && window.isSecureContext) {
+            // Clipboard API (modern browsers on HTTPS or localhost)
+            navigator.clipboard.writeText(text).then(() => {
+                alert("Card number copied!");
+            }).catch((err) => {
+                console.error("Clipboard API failed:", err);
+            });
+        } else {
+            // Fallback for insecure context
+            const textarea = document.createElement("textarea");
+            textarea.value = text;
+            textarea.style.position = "fixed"; // Prevent scrolling
+            document.body.appendChild(textarea);
+            textarea.focus();
+            textarea.select();
+
+            try {
+                document.execCommand('copy');
+                alert("Card number copied!");
+            } catch (err) {
+                console.error('Fallback copy failed:', err);
+            }
+
+            document.body.removeChild(textarea);
+        }
     }
 </script>
+
+
 
 {% endblock %}
