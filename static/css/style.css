@@ -49,6 +49,17 @@
     border-color: #558b2f;
 }
 
+.btn-outline-success {
+    background-color: #FFF;
+    border-color: #7cb342;
+    color: #7cb342;
+}
+
+.btn-outline-success:hover {
+    background-color: #7cb342;
+    border-color: #7cb342;
+}
+
 .text-success {
     color: #7cb342 !important;
 }
