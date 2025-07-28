@@ -1,1 +1,1 @@
-web: python manage.py migrate && python manage.py collectstatic --noinput --verbosity 2 && ls -l staticfiles && gunicorn studynest.wsgi:application --bind 0.0.0.0:$PORT
+web: python manage.py collectstatic --noinput --verbosity 2
