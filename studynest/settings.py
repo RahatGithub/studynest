@@ -10,6 +10,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import os
+print("STATIC_ROOT:", os.path.abspath(STATIC_ROOT))
+print("STATICFILES_DIRS:", STATICFILES_DIRS)
+
+
 from pathlib import Path
 from decouple import config
 import os
