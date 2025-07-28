@@ -22,7 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Security settings
 SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool)
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '*.railway.app']
+ALLOWED_HOSTS = ['studynest-q9tc.onrender.com', 'localhost', '127.0.0.1']
 
 # Application definition
 INSTALLED_APPS = [
@@ -105,17 +105,11 @@ USE_I18N = True
 USE_TZ = True
 
 
-
-
 # Static files
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles') # previously: STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'  # for using whitenoise library that handles images and files
-
-
-print("STATIC_ROOT:", os.path.abspath(STATIC_ROOT))
-print("STATICFILES_DIRS:", STATICFILES_DIRS)
 
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
@@ -140,8 +134,3 @@ LOGOUT_REDIRECT_URL = 'courses:home'
 # Stripe settings
 STRIPE_PUBLISHABLE_KEY = config('STRIPE_PUBLISHABLE_KEY')
 STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY')
-
-# Railway specific settings
-if 'RAILWAY_ENVIRONMENT' in os.environ:
-    DEBUG = False
-    ALLOWED_HOSTS = ['*']
