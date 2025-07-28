@@ -10,10 +10,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
-import os
-print("STATIC_ROOT:", os.path.abspath(STATIC_ROOT))
-print("STATICFILES_DIRS:", STATICFILES_DIRS)
-
 
 from pathlib import Path
 from decouple import config
@@ -116,6 +112,10 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles') # previously: STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'  # for using whitenoise library that handles images and files
+
+
+print("STATIC_ROOT:", os.path.abspath(STATIC_ROOT))
+print("STATICFILES_DIRS:", STATICFILES_DIRS)
 
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
