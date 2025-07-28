@@ -1,2 +1,2 @@
 release: python manage.py migrate && python manage.py collectstatic --noinput
-web: gunicorn studynest.wsgi:application
+web: gunicorn studynest.wsgi:application --host 0.0.0.0 --port $PORT
