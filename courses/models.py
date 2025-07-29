@@ -3,6 +3,7 @@ from django.conf import settings
 from django.utils.text import slugify
 from django.core.validators import MinValueValidator
 from decimal import Decimal
+from cloudinary.models import CloudinaryField
 
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -33,7 +34,8 @@ class Course(models.Model):
     slug = models.SlugField(max_length=200, unique=True, blank=True)
     description = models.TextField()
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, related_name='courses')
-    thumbnail = models.ImageField(upload_to='course_thumbnails/', blank=True, null=True)
+    # thumbnail = models.ImageField(upload_to='course_thumbnails/', blank=True, null=True)
+    thumbnail = CloudinaryField('image', folder='course_thumbnails', blank=True, null=True)
     course_type = models.CharField(max_length=10, choices=COURSE_TYPE_CHOICES, default='free')
     price = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal('0.00'), 
                                validators=[MinValueValidator(Decimal('0.00'))])
