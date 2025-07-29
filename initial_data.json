@@ -358,11 +358,11 @@
     "slug": "how-to-get-better-at-sales",
     "description": "Master the art of selling with proven techniques that turn prospects into loyal customers. This practical course covers essential sales skills from building rapport to closing deals effectively. Learn psychological triggers, objection handling, and relationship-building strategies used by top performers. Whether you're new to sales or looking to improve your results, this course provides actionable methods to boost your sales performance and increase revenue consistently.\r\n\r\nWhat You'll Learn:\r\n\r\n- Effective prospecting and lead generation techniques\r\n- How to build trust and rapport with potential customers\r\n- Proven sales presentation and storytelling methods\r\n- Strategies to handle objections and overcome resistance\r\n- Psychological principles that influence buying decisions\r\n- Closing techniques that feel natural and pressure-free\r\n- Follow-up systems to maintain long-term customer relationships\r\n- Time management and sales pipeline organization\r\n\r\nPrerequisites:\r\n\r\n- Basic communication skills\r\n- Willingness to practice and role-play scenarios\r\n- Access to phone/email for practical exercises\r\n- No prior sales experience required",
     "category": 4,
-    "thumbnail": "image/upload/course_thumbnails/WOrlD_TrIp_SeriEs_1_bTBeOrC.png",
+    "thumbnail": "image/upload/v1753816284/course_thumbnails/lvl4ugd1dffis2jtwp2u.png",
     "course_type": "free",
     "price": "0.00",
     "created_at": "2025-07-25T17:01:58.434Z",
-    "updated_at": "2025-07-29T18:33:07.878Z",
+    "updated_at": "2025-07-29T19:11:25.334Z",
     "is_published": true
   }
 },
@@ -375,11 +375,11 @@
     "slug": "laravel-in-high-end-projects",
     "description": "Master Laravel development for enterprise-level applications and complex business solutions. This advanced course teaches you how to architect, build, and deploy scalable Laravel applications that handle millions of users and high-traffic scenarios. Learn industry best practices, advanced design patterns, and optimization techniques used by top development teams. Cover topics including microservices architecture, API development, performance optimization, security hardening, and deployment strategies for mission-critical applications. You'll work with real-world project scenarios, learn to integrate third-party services, and understand how to maintain code quality in large development teams. Perfect for developers ready to take their Laravel skills to the professional level and work on high-stakes projects.\r\n\r\nWhat You'll Learn:\r\n\r\nAdvanced Laravel architecture patterns and design principles\r\nBuilding scalable APIs and microservices with Laravel\r\nDatabase optimization and query performance tuning\r\nAdvanced authentication and authorization systems\r\nCaching strategies and performance optimization techniques\r\nTesting methodologies for enterprise applications\r\nSecurity best practices and vulnerability prevention\r\nCI/CD pipelines and deployment automation\r\nIntegration with third-party services and payment gateways\r\nCode organization and team collaboration strategies\r\n\r\nPrerequisites:\r\n\r\nSolid understanding of PHP programming fundamentals\r\nBasic knowledge of object-oriented programming concepts\r\nFamiliarity with Laravel basics (routing, controllers, models)\r\nUnderstanding of database concepts and SQL\r\nExperience with version control (Git)\r\nBasic knowledge of web development concepts (HTTP, REST APIs)",
     "category": 2,
-    "thumbnail": "image/upload/course_thumbnails/laravel-course_dGi96F9.png",
+    "thumbnail": "image/upload/v1753816271/course_thumbnails/q8oqrbgwqju2x4l1x8mt.png",
     "course_type": "paid",
     "price": "7000.00",
     "created_at": "2025-07-25T19:09:06.673Z",
-    "updated_at": "2025-07-29T18:32:55.871Z",
+    "updated_at": "2025-07-29T19:11:12.266Z",
     "is_published": true
   }
 },
@@ -392,11 +392,11 @@
     "slug": "adobe-illustrator-complete-package",
     "description": "Master Adobe Illustrator from scratch with this comprehensive course designed for beginners and aspiring designers. You'll learn to create stunning vector graphics, logos, icons, and illustrations using professional tools and techniques. Through step-by-step video lessons, you'll gain confidence in designing for both digital and print platforms. No prior design experience is needed—just creativity and willingness to learn.\r\n\r\nWhat You'll Learn\r\n- Basics of vector graphics and Illustrator interface\r\n- Logo and icon design\r\n- Working with shapes, paths, and typography\r\n- Creating illustrations and exporting assets\r\n\r\nPrerequisites\r\n- Basic computer skills\r\n- Adobe Illustrator installed (any version)",
     "category": 5,
-    "thumbnail": "image/upload/course_thumbnails/WOrlD_TrIp_SeriEs_2_m8aE1Vs.png",
+    "thumbnail": "image/upload/v1753816258/course_thumbnails/nsc9pe70ovykdhtttxre.png",
     "course_type": "paid",
     "price": "3500.00",
     "created_at": "2025-07-27T06:52:06.901Z",
-    "updated_at": "2025-07-29T18:32:44.607Z",
+    "updated_at": "2025-07-29T19:10:58.739Z",
     "is_published": true
   }
 },
@@ -409,11 +409,11 @@
     "slug": "canva-design-essentials-for-beginners",
     "description": "Unleash your creativity with Canva, the easiest graphic design tool for non-designers. This course is perfect for students, marketers, small business owners, or anyone wanting to create eye-catching visuals. You'll learn how to design stunning social media posts, presentations, posters, and more—without any prior design experience. By the end, you'll confidently create professional designs that grab attention and communicate clearly. \r\n\r\nWhat You'll Learn\r\n- Navigating Canva’s interface and templates\r\n- Designing for social media, print, and web\r\n- Working with text, colors, images, and layers\r\n- Tips for visual balance and consistency\r\n\r\nPrerequisites\r\n- Basic internet and computer skills\r\n- Free Canva account",
     "category": 5,
-    "thumbnail": "image/upload/course_thumbnails/Studynest_Thumbnail.png",
+    "thumbnail": "image/upload/v1753816243/course_thumbnails/ny9gaehdolbvpisia1ow.png",
     "course_type": "free",
     "price": "0.00",
     "created_at": "2025-07-27T07:14:36.203Z",
-    "updated_at": "2025-07-29T18:32:38.614Z",
+    "updated_at": "2025-07-29T19:10:43.697Z",
     "is_published": true
   }
 },
@@ -426,11 +426,11 @@
     "slug": "python-for-competitive-programming",
     "description": "Master the use of Python in competitive programming and coding contests. This course focuses on speed, problem-solving strategies, and Python-specific tricks to help you excel in platforms like Codeforces, LeetCode, and HackerRank. You'll learn efficient coding practices, commonly used algorithms, and time-saving Python libraries to sharpen your edge in competitions. \r\n\r\nWhat You'll Learn\r\n- Fast input/output techniques\r\n- Time complexity analysis\r\n- Greedy, two-pointer, and sliding window strategies\r\n- Recursion and backtracking\r\n- Sorting, searching, and binary search patterns\r\n- Pythonic tricks for speed and simplicity\r\n\r\nPrerequisites\r\n- Basic knowledge of Python syntax\r\n- Familiarity with loops, conditionals, and functions\r\n- Logic/math skills at high school level",
     "category": 1,
-    "thumbnail": "image/upload/course_thumbnails/Studynest_Thumbnail_1.png",
+    "thumbnail": "image/upload/v1753816230/course_thumbnails/nyhfpbjdiogqlf4z2hts.png",
     "course_type": "paid",
     "price": "2800.00",
     "created_at": "2025-07-27T07:30:42.932Z",
-    "updated_at": "2025-07-29T18:32:30.919Z",
+    "updated_at": "2025-07-29T19:10:30.584Z",
     "is_published": true
   }
 },
@@ -443,11 +443,11 @@
     "slug": "start-your-coding-with-cc",
     "description": "Are you completely new to programming and unsure where to start? \"Start Your Coding with C/C++\" is the perfect beginner-friendly course to launch your journey into the world of coding using the powerful and foundational languages—C and C++. This course is crafted for absolute beginners who want to understand how computers think, how code works, and how to write their own programs from scratch.\r\n\r\nC and C++ are the backbone of most modern programming languages. Learning these gives you an edge in understanding how software truly works under the hood. From basic syntax and logic-building to understanding memory management and writing your first real programs, this course ensures a solid start.\r\n\r\nYou’ll start with simple concepts like variables, loops, and functions, then move on to C++'s enhancements like OOP (Object-Oriented Programming). This dual-language exposure will help you write clean, efficient code and build a strong foundation to learn any other language in the future.\r\n\r\nWhether you're aiming to build software, learn game development, prepare for university, or get ready for future tech careers, this course is your ideal starting point.\r\n\r\nJoin now and take your first confident steps in the world of programming!\r\n\r\nWhat You'll Learn\r\n- Basic syntax and structure of C & C++\r\n- Writing and running your first programs\r\n- Logic-building using conditions and loops\r\n- Functions and code reuse\r\n- Introduction to object-oriented concepts (in C++)\r\n- Best practices for writing clean, readable code\r\n\r\nPrerequisites\r\n- No prior programming experience required\r\n- Basic understanding of English and high-school level math",
     "category": 1,
-    "thumbnail": "image/upload/course_thumbnails/Studynest_Thumbnail_2.png",
+    "thumbnail": "image/upload/v1753816147/course_thumbnails/uttguiselenzl7win9um.png",
     "course_type": "free",
     "price": "0.00",
     "created_at": "2025-07-27T10:06:26.202Z",
-    "updated_at": "2025-07-29T18:32:24.234Z",
+    "updated_at": "2025-07-29T19:09:08.391Z",
     "is_published": true
   }
 },
