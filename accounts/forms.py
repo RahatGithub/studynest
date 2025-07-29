@@ -42,10 +42,10 @@ class StudentSignUpForm(UserCreationForm):
     
 
     def clean_profile_picture(self):
-    image = self.cleaned_data.get('profile_picture')
-    if image and image.size > 5 * 1024 * 1024:
-        raise forms.ValidationError("Profile picture size must be under 5 MB.")
-    return image
+        image = self.cleaned_data.get('profile_picture')
+        if image and image.size > 5 * 1024 * 1024:
+            raise forms.ValidationError("Profile picture size must be under 5 MB.")
+        return image
 
     
     def save(self, commit=True):
@@ -104,7 +104,7 @@ class TutorSignUpForm(UserCreationForm):
         self.fields['first_name'].required = False 
         self.fields['last_name'].required = False  
     
-    
+
     def clean_profile_picture(self):
         picture = self.cleaned_data.get('profile_picture')
         if picture and picture.size > 5 * 1024 * 1024:  # 5 MB
