@@ -2,7 +2,9 @@ from django.core.management.base import BaseCommand
 from django.core.management import call_command
 import os
 from django.conf import settings
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 class Command(BaseCommand):
     help = 'Load initial data from fixtures'
