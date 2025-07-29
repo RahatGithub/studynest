@@ -139,7 +139,6 @@ CLOUDINARY_STORAGE = {
 
 # Media files (cloudinary)
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-MEDIA_URL = '/media/'
 
 
 # Default primary key field type
