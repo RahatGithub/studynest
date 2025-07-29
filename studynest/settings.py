@@ -9,12 +9,16 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
-
+# for using cloudinary 
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 
 from pathlib import Path
 from decouple import config
 import os
 import dj_database_url
+
 
 # Build paths inside the project
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -33,7 +37,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     
-    # Our apps
+    # Cloudinary apps
+    'cloudinary',
+    'cloudinary_storage',
+
+    # Custom apps
     'accounts',
     'courses',
     'payments',
@@ -116,9 +124,23 @@ STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 ]
 
-# Media files
+# Cloudinary configuration
+cloudinary.config(
+    cloud_name='dpxri6ywy',
+    api_key='333913175448819',
+    api_secret='NXxYsLkAXAbBsG9Fvcdthou_11c',
+    secure=True
+)
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'dpxri6ywy',
+    'API_KEY': '333913175448819',
+    'API_SECRET': 'NXxYsLkAXAbBsG9Fvcdthou_11c',
+}
+
+# Media files (cloudinary)
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

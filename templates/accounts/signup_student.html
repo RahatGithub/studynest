@@ -89,4 +89,19 @@
         </div>
     </div>
 </div>
+
+
+<script>
+function validateFileSize(input) {
+    const maxSize = 5 * 1024 * 1024; // 5 MB
+    const file = input.files[0];
+
+    if (file && file.size > maxSize) {
+        alert("File size must be less than 5 MB.");
+        input.value = ""; // Clear the file input
+    }
+}
+</script>
+
+
 {% endblock %}
