@@ -38,8 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     
     # Cloudinary apps
-    'cloudinary',
     'cloudinary_storage',
+    'cloudinary',
 
     # Custom apps
     'accounts',
