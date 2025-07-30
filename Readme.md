@@ -2,6 +2,14 @@
 
 A Django-based e-learning platform that allows tutors to create and sell courses while students can enroll and track their progress.
 
+## Live Demo
+
+Visit the live project: [https://studynest-q9tc.onrender.com](https://studynest-q9tc.onrender.com)
+
+## Demo Video
+
+Watch the screen-recorded walkthrough: [https://photos.app.goo.gl/PiwabqbbnwcxN1sU7](https://photos.app.goo.gl/PiwabqbbnwcxN1sU7)
+
 ## Features
 
 - **User Authentication**: Separate registration for students and tutors
@@ -33,13 +41,17 @@ A Django-based e-learning platform that allows tutors to create and sell courses
 
 ## Test Credentials
 
-For Stripe payments, use test card: 4242 4242 4242 4242
+For Stripe payments, use the following test card:
+
+- **Card Number**: `4242 4242 4242 4242`
+- **Expiry Date**: Any future date (e.g., `12/34`)
+- **CVC**: Any 3 digits (e.g., `123`)
+- **Email**: Any email (e.g., `user@gmail.com`)
 
 ## Notes
 
 - Uses Stripe sandbox for payment demonstration
 - Designed for easy migration to AWS S3 for video hosting
-- Portfolio project demonstrating Django skills
 
 ## Future Enhancements
 
