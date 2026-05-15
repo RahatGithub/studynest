@@ -11,7 +11,6 @@ class User(AbstractUser):
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='student')
     bio = models.TextField(blank=True, null=True)
     profile_picture = CloudinaryField('image', folder='profile_pictures', blank=True, null=True)
-    date_joined = models.DateTimeField(auto_now_add=True)
     
     def is_student(self):
         return self.role == 'student'

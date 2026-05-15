@@ -99,7 +99,7 @@
                                     {% else %}
                                         <div class="rounded-circle bg-success d-flex align-items-center justify-content-center me-2" 
                                             style="width: 40px; height: 40px;">
-                                            <span class="text-white fs-3">{{ user.username|first|upper }}</span>
+                                            <span class="text-white fs-3">{{ course.tutor.username|first|upper }}</span>
                                         </div>
                                     {% endif %}
                                     {% if course.tutor.first_name or course.tutor.last_name %}

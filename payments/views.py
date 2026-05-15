@@ -1,14 +1,14 @@
+import logging
 import stripe
 from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.urls import reverse
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from django.utils import timezone
 from courses.models import Course, Enrollment
 from .models import Payment
+
+logger = logging.getLogger(__name__)
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -43,7 +43,7 @@ def create_checkout_session(request, slug):
                     'currency': 'usd',
                     'product_data': {
                         'name': course.title,
-                        'description': f'Use 4242 4242 4242 4242 as card number and any 3-digit number as CVC. Enrollment in {course.title} by {course.tutor.username}',
+                        'description': f'Enrollment in {course.title} by {course.tutor.username}',
                     },
                     # Convert BDT price to USD for Stripe processing
                     'unit_amount': convert_bdt_to_usd(course.price),  # Convert BDT to USD cents
@@ -67,7 +67,8 @@ def create_checkout_session(request, slug):
         return redirect(checkout_session.url, code=303)
         
     except Exception as e:
-        messages.error(request, f'Error creating payment session: {str(e)}')
+        logger.error(f'Error creating payment session for course {slug}: {e}')
+        messages.error(request, 'Something went wrong while creating the payment session. Please try again.')
         return redirect('courses:course_detail', slug=slug)
 
 @login_required
@@ -112,10 +113,12 @@ def payment_success(request):
             return redirect('courses:course_detail', slug=course_slug)
             
     except stripe.error.StripeError as e:
-        messages.error(request, f'Stripe error: {str(e)}')
+        logger.error(f'Stripe error for session {session_id}: {e}')
+        messages.error(request, 'There was an issue processing your payment. Please try again.')
         return redirect('courses:course_detail', slug=course_slug)
     except Exception as e:
-        messages.error(request, f'Error processing payment: {str(e)}')
+        logger.error(f'Error processing payment for session {session_id}: {e}')
+        messages.error(request, 'An unexpected error occurred. Please try again.')
         return redirect('courses:dashboard')
 
 @login_required

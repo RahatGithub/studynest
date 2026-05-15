@@ -2,14 +2,13 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Q, Count, Avg
-from django.http import JsonResponse
 from django.urls import reverse
 from .models import Course, Category, Enrollment, Module, Lesson, LessonProgress, Review
 from .forms import CourseForm, ModuleForm, LessonForm, ReviewForm
 from django.utils import timezone
 
 def home(request):
-    featured_courses = Course.objects.filter(is_published=True).order_by('-created_at')[:6]
+    featured_courses = Course.objects.filter(is_published=True).select_related('tutor', 'category').order_by('-created_at')[:6]
     categories = Category.objects.all()
     context = {
         'featured_courses': featured_courses,
@@ -18,7 +17,7 @@ def home(request):
     return render(request, 'courses/home.html', context)
 
 def course_list(request):
-    courses = Course.objects.filter(is_published=True)
+    courses = Course.objects.filter(is_published=True).select_related('tutor', 'category')
     categories = Category.objects.all()
     
     # Search functionality
@@ -54,29 +53,34 @@ def course_list(request):
 
 
 def course_detail(request, slug):
-    course = get_object_or_404(Course, slug=slug, is_published=True)
+    course = get_object_or_404(
+        Course.objects.select_related('tutor', 'category').prefetch_related('modules__lessons', 'reviews__student'),
+        slug=slug, is_published=True
+    )
     modules = course.modules.all()
     reviews = course.reviews.all()
-    
+    total_lessons = Lesson.objects.filter(module__course=course).count()
+
     # Calculate average rating
     avg_rating = course.get_average_rating()
-    
+
     # Check if user is enrolled
     is_enrolled = False
     has_reviewed = False
-    has_completed = False 
-    
+    has_completed = False
+
     if request.user.is_authenticated:
-        if request.user.is_student():  
+        if request.user.is_student():
             is_enrolled = Enrollment.objects.filter(student=request.user, course=course).exists()
-            if is_enrolled: 
+            if is_enrolled:
                 has_completed = Enrollment.objects.filter(student=request.user, course=course)[0].completed
                 has_reviewed = Review.objects.filter(student=request.user, course=course).exists()
-    
+
     context = {
         'course': course,
         'modules': modules,
         'reviews': reviews,
+        'total_lessons': total_lessons,
         'is_enrolled': is_enrolled,
         'has_completed': has_completed,
         'avg_rating': avg_rating,
@@ -295,16 +299,21 @@ def enroll_free_course(request, slug):
 def learn_course(request, slug):
     course = get_object_or_404(Course, slug=slug, is_published=True)
     enrollment = get_object_or_404(Enrollment, student=request.user, course=course)
-    
-    modules = course.modules.all()
-    
-    # Get or create progress for all lessons
-    for module in modules:
-        for lesson in module.lessons.all():
-            LessonProgress.objects.get_or_create(
-                enrollment=enrollment,
-                lesson=lesson
-            )
+
+    modules = course.modules.prefetch_related('lessons').all()
+
+    # Bulk-create progress records for lessons that don't have one yet
+    all_lessons = Lesson.objects.filter(module__course=course)
+    existing_lesson_ids = set(
+        LessonProgress.objects.filter(enrollment=enrollment).values_list('lesson_id', flat=True)
+    )
+    new_progress = [
+        LessonProgress(enrollment=enrollment, lesson=lesson)
+        for lesson in all_lessons
+        if lesson.id not in existing_lesson_ids
+    ]
+    if new_progress:
+        LessonProgress.objects.bulk_create(new_progress, ignore_conflicts=True)
     
     # Get current lesson (first incomplete or first lesson)
     current_lesson = None
@@ -328,35 +337,47 @@ def learn_course(request, slug):
 
 
 
+def get_next_lesson(course, current_lesson):
+    """Find the next lesson in course order after the given lesson."""
+    found_current = False
+    for module in course.modules.all().order_by('order'):
+        for l in module.lessons.all().order_by('order'):
+            if found_current:
+                return l
+            if l.id == current_lesson.id:
+                found_current = True
+    return None
+
+
 @login_required
 def view_lesson(request, slug, lesson_id):
     course = get_object_or_404(Course, slug=slug, is_published=True)
     enrollment = get_object_or_404(Enrollment, student=request.user, course=course)
     lesson = get_object_or_404(Lesson, id=lesson_id, module__course=course)
-    
+
     # Get or create progress
     progress, created = LessonProgress.objects.get_or_create(
         enrollment=enrollment,
         lesson=lesson
     )
-    
+
     # Handle form submission
     if request.method == 'POST':
         action = request.POST.get('action')
-        
+
         if action in ['mark_complete_only', 'complete_and_next']:
             # Mark current lesson as complete
             progress.completed = True
             progress.completed_at = timezone.now()
             progress.save()
-            
+
             # Check if course is completed
             total_lessons = Lesson.objects.filter(module__course=course).count()
             completed_lessons = LessonProgress.objects.filter(
                 enrollment=enrollment,
                 completed=True
             ).count()
-            
+
             if total_lessons == completed_lessons:
                 enrollment.completed = True
                 enrollment.completed_at = timezone.now()
@@ -364,46 +385,20 @@ def view_lesson(request, slug, lesson_id):
                 messages.success(request, 'Congratulations! You have completed the course!')
             else:
                 messages.success(request, 'Lesson marked as complete!')
-            
+
             # If action is complete_and_next, find and redirect to next lesson
             if action == 'complete_and_next':
-                next_lesson = None
-                found_current = False
-                
-                for module in course.modules.all().order_by('order'):
-                    for l in module.lessons.all().order_by('order'):
-                        if found_current:
-                            next_lesson = l
-                            break
-                        if l.id == lesson.id:
-                            found_current = True
-                    if next_lesson:
-                        break
-                
+                next_lesson = get_next_lesson(course, lesson)
                 if next_lesson:
                     return redirect('courses:view_lesson', slug=course.slug, lesson_id=next_lesson.id)
                 else:
                     messages.info(request, 'You have completed all lessons!')
                     return redirect('courses:learn_course', slug=course.slug)
-            
+
             # For mark_complete_only, stay on the same page
             return redirect('courses:view_lesson', slug=course.slug, lesson_id=lesson.id)
-    
-    
-    # Check if there's any next lesson
-    next_lesson = None
-    found_current = False
 
-    for module in course.modules.all().order_by('order'):
-        for l in module.lessons.all().order_by('order'):
-            if found_current:
-                next_lesson = l
-                break
-            if l.id == lesson.id:
-                found_current = True
-        if next_lesson:
-            break
-
+    next_lesson = get_next_lesson(course, lesson)
 
     context = {
         'course': course,
@@ -411,7 +406,7 @@ def view_lesson(request, slug, lesson_id):
         'lesson': lesson,
         'progress': progress,
         'modules': course.modules.all().order_by('order'),
-        'next_lesson': next_lesson, 
+        'next_lesson': next_lesson,
     }
     return render(request, 'courses/view_lesson.html', context)
 

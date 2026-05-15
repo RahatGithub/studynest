@@ -31,6 +31,12 @@ class EnrollmentAdmin(admin.ModelAdmin):
     list_filter = ['completed', 'enrolled_at']
     search_fields = ['student__username', 'course__title']
 
+@admin.register(LessonProgress)
+class LessonProgressAdmin(admin.ModelAdmin):
+    list_display = ['enrollment', 'lesson', 'completed', 'completed_at']
+    list_filter = ['completed']
+    search_fields = ['enrollment__student__username', 'lesson__title']
+
 @admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):
     list_display = ['student', 'course', 'rating', 'created_at']

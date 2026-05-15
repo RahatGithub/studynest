@@ -83,7 +83,14 @@
             <div class="card mt-4">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h5 class="card-title mb-0">Student Reviews</h5>
+                        <h5 class="card-title mb-0">
+                            Student Reviews
+                            {% if avg_rating %}
+                                <span class="text-warning ms-2">
+                                    <i class="bi bi-star-fill"></i> {{ avg_rating }}/5
+                                </span>
+                            {% endif %}
+                        </h5>
                         {% if user.is_authenticated and user.is_student and is_enrolled and not has_reviewed %}
                             <a href="{% url 'courses:add_review' course.slug %}" class="btn btn-sm btn-primary">
                                 Add Review
@@ -216,10 +223,6 @@
                         <li class="mb-2">
                             <i class="bi bi-phone me-2"></i>
                             Access on mobile and desktop
-                        </li>
-                        <li class="mb-2">
-                            <i class="bi bi-mortarboard me-2"></i>
-                            Certificate on completion
                         </li>
                     </ul>
                 </div>

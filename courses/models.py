@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Avg
 from django.conf import settings
 from django.utils.text import slugify
 from django.core.validators import MinValueValidator
@@ -60,11 +61,8 @@ class Course(models.Model):
         return self.reviews.count() 
     
     def get_average_rating(self):
-        reviews = self.reviews.all()
-        if reviews:
-            avg = sum([review.rating for review in reviews]) / len(reviews)
-            return round(avg, 1)
-        return 0
+        avg = self.reviews.aggregate(Avg('rating'))['rating__avg']
+        return round(avg, 1) if avg else 0
 
 
 class Module(models.Model):
@@ -130,7 +128,9 @@ class Enrollment(models.Model):
     completed_at = models.DateTimeField(null=True, blank=True)
     
     class Meta:
-        unique_together = ['student', 'course']
+        constraints = [
+            models.UniqueConstraint(fields=['student', 'course'], name='unique_enrollment'),
+        ]
         ordering = ['-enrolled_at']
     
     def __str__(self):
@@ -150,7 +150,9 @@ class LessonProgress(models.Model):
     completed_at = models.DateTimeField(null=True, blank=True)
     
     class Meta:
-        unique_together = ['enrollment', 'lesson']
+        constraints = [
+            models.UniqueConstraint(fields=['enrollment', 'lesson'], name='unique_lesson_progress'),
+        ]
     
     def __str__(self):
         return f"{self.enrollment.student.username} - {self.lesson.title}"
@@ -164,7 +166,9 @@ class Review(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     
     class Meta:
-        unique_together = ['course', 'student']
+        constraints = [
+            models.UniqueConstraint(fields=['course', 'student'], name='unique_review'),
+        ]
         ordering = ['-created_at']
     
     def __str__(self):
