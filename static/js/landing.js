@@ -249,9 +249,10 @@ ScrollTrigger.create({
     });
 
     cards.forEach((card, i) => {
-        // Card entrance — 3D flip-up with stagger
+        // Card entrance — slide in from left with 3D rotation
         tl.from(card, {
-            y: 100,
+            x: -120,
+            y: 40,
             opacity: 0,
             rotationX: -15,
             rotationY: i % 2 === 0 ? -8 : 8,
