@@ -9,6 +9,8 @@ __pycache__/
 db.sqlite3
 media/
 staticfiles/
+profile_pictures/
+tree.txt
 
 # IDE
 .vscode/
@@ -24,3 +26,6 @@ build/
 # OS
 .DS_Store
 Thumbs.db
+
+# Hosting platform files
+.railwayignore

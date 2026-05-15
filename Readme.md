@@ -4,10 +4,6 @@ A Django-based e-learning platform that allows tutors to create and sell courses
 
 ![StudyNest](static/images/thumbnail.png)
 
-## Live Demo
-
-Visit the live project: [https://studynest-q9tc.onrender.com](https://studynest-q9tc.onrender.com)
-
 ## Demo Video
 
 Watch the screen-recorded walkthrough: [https://photos.app.goo.gl/PiwabqbbnwcxN1sU7](https://photos.app.goo.gl/PiwabqbbnwcxN1sU7)

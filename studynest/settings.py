@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Security settings
 SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool)
-ALLOWED_HOSTS = ['studynest-q9tc.onrender.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1', cast=lambda v: [s.strip() for s in v.split(',')])
 
 # Application definition
 INSTALLED_APPS = [
@@ -126,15 +126,15 @@ STATICFILES_FINDERS = [
 
 # Cloudinary configuration
 cloudinary.config(
-    cloud_name='dpxri6ywy',
-    api_key='333913175448819',
-    api_secret='NXxYsLkAXAbBsG9Fvcdthou_11c',
+    cloud_name=config('CLOUDINARY_CLOUD_NAME'),
+    api_key=config('CLOUDINARY_API_KEY'),
+    api_secret=config('CLOUDINARY_API_SECRET'),
     secure=True
 )
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': 'dpxri6ywy',
-    'API_KEY': '333913175448819',
-    'API_SECRET': 'NXxYsLkAXAbBsG9Fvcdthou_11c',
+    'CLOUD_NAME': config('CLOUDINARY_CLOUD_NAME'),
+    'API_KEY': config('CLOUDINARY_API_KEY'),
+    'API_SECRET': config('CLOUDINARY_API_SECRET'),
 }
 
 # Media files (cloudinary)
