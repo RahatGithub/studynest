@@ -143,32 +143,213 @@ ScrollTrigger.create({
 });
 
 /* ===========================================
-   FEATURES SECTION
+   FEATURES SECTION — Advanced Animations
    =========================================== */
-gsap.from('.section-header', {
-    scrollTrigger: {
-        trigger: '#features',
-        start: 'top 80%',
-        toggleActions: 'play none none none',
-    },
-    y: 40,
-    opacity: 0,
-    duration: 0.8,
-    ease: 'power2.out',
-});
 
-gsap.from('.feature-card', {
-    scrollTrigger: {
-        trigger: '.features-grid',
-        start: 'top 80%',
-        toggleActions: 'play none none none',
-    },
-    y: 70,
-    opacity: 0,
-    duration: 0.7,
-    stagger: 0.12,
-    ease: 'power2.out',
-});
+/* --- Section header: overline, title chars, underline, subtitle --- */
+(function initFeaturesHeader() {
+    const tl = gsap.timeline({
+        scrollTrigger: {
+            trigger: '#features',
+            start: 'top 78%',
+            toggleActions: 'play none none none',
+        },
+    });
+
+    // Overline slides in
+    tl.from('#features .section-overline', {
+        y: 20,
+        opacity: 0,
+        duration: 0.5,
+        ease: 'power2.out',
+    });
+
+    // Title characters split and stagger
+    const titleEl = document.getElementById('features-title');
+    if (titleEl) {
+        const text = titleEl.textContent.trim();
+        titleEl.innerHTML = text
+            .split('')
+            .map(ch => ch === ' '
+                ? ' '
+                : `<span class="f-char" style="display:inline-block">${ch}</span>`)
+            .join('');
+        const chars = titleEl.querySelectorAll('.f-char');
+        tl.from(chars, {
+            y: 40,
+            opacity: 0,
+            rotationX: -90,
+            duration: 0.6,
+            stagger: 0.03,
+            ease: 'back.out(1.7)',
+        }, '-=0.2');
+    }
+
+    // Gradient underline draws in
+    tl.to('.title-underline-inner', {
+        scaleX: 1,
+        duration: 0.7,
+        ease: 'power3.inOut',
+    }, '-=0.3');
+
+    // Subtitle fades up
+    tl.from('#features .section-subtitle', {
+        y: 15,
+        opacity: 0,
+        duration: 0.5,
+        ease: 'power2.out',
+    }, '-=0.4');
+})();
+
+/* --- Background particles float and pulse --- */
+(function initFeatureParticles() {
+    gsap.to('.f-particle', {
+        scrollTrigger: {
+            trigger: '#features',
+            start: 'top 80%',
+            toggleActions: 'play none none none',
+        },
+        opacity: 0.5,
+        duration: 1,
+        stagger: 0.12,
+    });
+
+    document.querySelectorAll('.f-particle').forEach((p, i) => {
+        gsap.to(p, {
+            y: `random(-40, 40)`,
+            x: `random(-30, 30)`,
+            duration: 4 + i * 1.2,
+            ease: 'sine.inOut',
+            repeat: -1,
+            yoyo: true,
+            delay: i * 0.5,
+        });
+        gsap.to(p, {
+            opacity: 'random(0.2, 0.7)',
+            duration: 2 + i * 0.6,
+            ease: 'sine.inOut',
+            repeat: -1,
+            yoyo: true,
+            delay: i * 0.3,
+        });
+    });
+})();
+
+/* --- Feature cards: 3D entrance with stagger --- */
+(function initFeatureCards() {
+    const cards = gsap.utils.toArray('.feature-card');
+
+    // Entrance timeline
+    const tl = gsap.timeline({
+        scrollTrigger: {
+            trigger: '.features-grid',
+            start: 'top 78%',
+            toggleActions: 'play none none none',
+        },
+    });
+
+    cards.forEach((card, i) => {
+        // Card entrance — 3D flip-up with stagger
+        tl.from(card, {
+            y: 100,
+            opacity: 0,
+            rotationX: -15,
+            rotationY: i % 2 === 0 ? -8 : 8,
+            scale: 0.9,
+            duration: 0.8,
+            ease: 'power3.out',
+        }, i * 0.15);
+
+        // Icon ring pulse after card lands
+        const ring = card.querySelector('.icon-ring');
+        if (ring) {
+            tl.to(ring, {
+                opacity: 0.6,
+                scale: 1,
+                duration: 0.5,
+                ease: 'power2.out',
+            }, i * 0.15 + 0.5);
+
+            tl.to(ring, {
+                opacity: 0,
+                scale: 1.5,
+                duration: 0.6,
+                ease: 'power1.out',
+            }, i * 0.15 + 0.8);
+        }
+
+        // Shine sweep across card
+        const shine = card.querySelector('.feature-shine');
+        if (shine) {
+            tl.to(shine, {
+                left: '150%',
+                duration: 0.8,
+                ease: 'power2.inOut',
+            }, i * 0.15 + 0.4);
+        }
+    });
+
+    /* --- Mouse-follow glow + 3D tilt on hover (desktop only) --- */
+    if (window.matchMedia('(min-width: 769px) and (hover: hover)').matches) {
+        cards.forEach(card => {
+            const glow = card.querySelector('.feature-card-glow');
+            let borderAngle = 0;
+            let borderRaf = null;
+
+            // Rotating border animation
+            function animateBorder() {
+                borderAngle = (borderAngle + 0.8) % 360;
+                card.style.setProperty('--border-angle', borderAngle + 'deg');
+                borderRaf = requestAnimationFrame(animateBorder);
+            }
+
+            card.addEventListener('mouseenter', () => {
+                animateBorder();
+            });
+
+            card.addEventListener('mouseleave', () => {
+                cancelAnimationFrame(borderRaf);
+                gsap.to(card, {
+                    rotationX: 0,
+                    rotationY: 0,
+                    duration: 0.5,
+                    ease: 'power2.out',
+                    overwrite: 'auto',
+                });
+            });
+
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+
+                // 3D tilt
+                const rotateX = ((y - centerY) / centerY) * -8;
+                const rotateY = ((x - centerX) / centerX) * 8;
+
+                gsap.to(card, {
+                    rotationX: rotateX,
+                    rotationY: rotateY,
+                    duration: 0.3,
+                    ease: 'power1.out',
+                    overwrite: 'auto',
+                });
+
+                // Glow follows cursor
+                if (glow) {
+                    gsap.to(glow, {
+                        left: x,
+                        top: y,
+                        duration: 0.3,
+                        ease: 'power1.out',
+                    });
+                }
+            });
+        });
+    }
+})();
 
 /* ===========================================
    HOW IT WORKS SECTION
