@@ -3,9 +3,11 @@ from django.urls import path, include, re_path
 from django.conf import settings
 from django.conf.urls.static import static
 from django.views.static import serve
+from . import views as project_views
 
 
 urlpatterns = [
+    path('', project_views.landing_page, name='landing'),
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls', namespace='accounts')),
     path('payments/', include('payments.urls', namespace='payments')),
