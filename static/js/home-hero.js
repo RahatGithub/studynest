@@ -24,16 +24,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (ctas) tl.to(ctas, { opacity: 1, y: 0, duration: 0.5 }, '-=0.15');
 
     /* ===========================================
-       Right column: Rotating Card Stack Carousel
+       Right column: Messy Deck with Flip Expand
        =========================================== */
     if (visual) {
         const cards = gsap.utils.toArray(visual.querySelectorAll('.preview-card'));
-
         if (cards.length >= 3) {
-            initCardCarousel(cards);
-        } else {
-            // Fallback: simple entrance for fewer cards
-            gsap.to(cards, { opacity: 1, y: 0, scale: 1, duration: 0.7, stagger: 0.15, ease: 'power3.out', delay: 0.3 });
+            initMessyDeck(cards, visual);
         }
     }
 
@@ -61,75 +57,171 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* ===========================================
-   Card Carousel Logic
-   DOM nodes move between positions; data rides along.
+   Messy Deck — static tilted stack + Flip expand
    =========================================== */
-function initCardCarousel(cards) {
+function initMessyDeck(cards, container) {
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const flipDuration = prefersReduced ? 0.01 : 0.6;
 
-    // Three target states: front (index 0), middle (1), back (2)
-    const positions = [
-        { zIndex: 3, scale: 1,    y: 0,   x: 0,  opacity: 1    }, // front
-        { zIndex: 2, scale: 0.92, y: -12, x: 15,  opacity: 0.7  }, // middle
-        { zIndex: 1, scale: 0.85, y: -22, x: 28,  opacity: 0.45 }, // back
+    // Messy deck positions (tilted same direction, offset to peek)
+    const deckPositions = [
+        { rotation: 4,  x: 0,  y: 0,  zIndex: 3 }, // top
+        { rotation: 7,  x: 35, y: 20, zIndex: 2 }, // middle (peeks right/bottom)
+        { rotation: 10, x: 65, y: 40, zIndex: 1 }, // bottom (peeks more)
     ];
 
-    // State array: slot[posIndex] = card element
-    // Initially card0=front, card1=middle, card2=back
-    let slots = [cards[0], cards[1], cards[2]];
-
-    // --- Entrance: stagger into initial positions ---
-    const entranceTl = gsap.timeline({ delay: 0.3 });
+    // Set initial deck positions
     cards.forEach((card, i) => {
-        gsap.set(card, { opacity: 0, scale: 0.85, y: 30 });
-        entranceTl.to(card, {
-            ...positions[i],
-            duration: 0.7,
-            ease: 'power3.out',
-        }, i * 0.15);
+        const pos = deckPositions[i];
+        gsap.set(card, {
+            rotation: pos.rotation,
+            x: pos.x,
+            y: pos.y,
+            zIndex: pos.zIndex,
+            opacity: 1,
+        });
     });
 
-    if (prefersReduced) return;
+    // Entrance: stagger fade in from slight offset
+    gsap.from(cards, {
+        opacity: 0,
+        y: '+=30',
+        scale: 0.9,
+        duration: 0.7,
+        stagger: 0.12,
+        ease: 'power3.out',
+        delay: 0.3,
+    });
 
-    // --- Cycle: back card rises to front, others shift down ---
-    function cycle() {
-        const rising   = slots[2]; // back  → will become front
-        const toMiddle = slots[0]; // front → will become middle
-        const toBack   = slots[1]; // middle → will become back
+    // Track expanded state
+    let expandedCard = null;
 
-        // Rotate the state array
-        slots = [rising, toMiddle, toBack];
-
-        const tl = gsap.timeline({
-            defaults: { duration: 1.2, ease: 'power2.inOut' },
-            onComplete: () => gsap.delayedCall(1.5, cycle),
+    // --- Hover: glow + lift ---
+    if (!prefersReduced) {
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                if (expandedCard) return;
+                gsap.to(card, { scale: 1.02, y: '-=4', duration: 0.25, ease: 'power2.out', overwrite: 'auto' });
+            });
+            card.addEventListener('mouseleave', () => {
+                if (expandedCard) return;
+                const i = cards.indexOf(card);
+                gsap.to(card, {
+                    scale: 1,
+                    y: deckPositions[i].y,
+                    duration: 0.25,
+                    ease: 'power2.out',
+                    overwrite: 'auto',
+                });
+            });
         });
-
-        // Rising card: lift up past the stack, scale to full, land at front
-        tl.to(rising, {
-            keyframes: [
-                { y: -40, scale: 1.0, x: 0, opacity: 1, duration: 0.6, ease: 'power2.in' },
-                { y: 0, duration: 0.6, ease: 'power2.out' },
-            ],
-        }, 0);
-        // Flip z-index to top at the halfway mark
-        tl.set(rising, { zIndex: positions[0].zIndex }, 0.6);
-
-        // Previous front → middle
-        tl.to(toMiddle, {
-            ...positions[1],
-            duration: 1.2,
-        }, 0);
-        tl.set(toMiddle, { zIndex: positions[1].zIndex }, 0.6);
-
-        // Previous middle → back
-        tl.to(toBack, {
-            ...positions[2],
-            duration: 1.2,
-        }, 0);
-        tl.set(toBack, { zIndex: positions[2].zIndex }, 0);
     }
 
-    // Start cycling after entrance completes
-    entranceTl.call(() => gsap.delayedCall(1.5, cycle));
+    // --- Click to expand (GSAP Flip) ---
+    cards.forEach(card => {
+        card.addEventListener('click', (e) => {
+            // If already expanded, do nothing (only close button collapses)
+            if (expandedCard) return;
+            // Don't expand if clicking the close button
+            if (e.target.closest('.preview-card-close')) return;
+
+            expandCard(card);
+        });
+    });
+
+    // Close buttons
+    cards.forEach(card => {
+        const closeBtn = card.querySelector('.preview-card-close');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (expandedCard === card) {
+                    collapseCard(card);
+                }
+            });
+        }
+    });
+
+    function expandCard(card) {
+        expandedCard = card;
+        const otherCards = cards.filter(c => c !== card);
+
+        // Capture state before changes
+        const state = Flip.getState(card);
+
+        // Add expanded class
+        card.classList.add('expanded');
+
+        // Animate with Flip
+        const flipTl = Flip.from(state, {
+            duration: flipDuration,
+            ease: 'power2.inOut',
+            absolute: true,
+        });
+
+        // Fade out other cards simultaneously
+        gsap.to(otherCards, {
+            opacity: 0,
+            scale: 0.9,
+            duration: flipDuration,
+            ease: 'power2.inOut',
+        });
+
+        // Fade in expanded content after Flip lands
+        const expandedContent = card.querySelector('.card-expanded-content');
+        if (expandedContent && !prefersReduced) {
+            gsap.from(expandedContent, {
+                opacity: 0,
+                y: 15,
+                duration: 0.4,
+                ease: 'power2.out',
+                delay: flipDuration * 0.5,
+            });
+        }
+    }
+
+    function collapseCard(card) {
+        const otherCards = cards.filter(c => c !== card);
+
+        // Capture expanded state
+        const state = Flip.getState(card);
+
+        // Remove expanded class
+        card.classList.remove('expanded');
+
+        // Restore deck position
+        const i = cards.indexOf(card);
+        const pos = deckPositions[i];
+        gsap.set(card, {
+            rotation: pos.rotation,
+            x: pos.x,
+            y: pos.y,
+            zIndex: pos.zIndex,
+        });
+
+        // Animate back with Flip
+        Flip.from(state, {
+            duration: flipDuration,
+            ease: 'power2.inOut',
+            absolute: true,
+        });
+
+        // Fade other cards back in
+        otherCards.forEach((c, idx) => {
+            const otherIdx = cards.indexOf(c);
+            const otherPos = deckPositions[otherIdx];
+            gsap.to(c, {
+                opacity: 1,
+                scale: 1,
+                rotation: otherPos.rotation,
+                x: otherPos.x,
+                y: otherPos.y,
+                zIndex: otherPos.zIndex,
+                duration: flipDuration,
+                ease: 'power2.inOut',
+            });
+        });
+
+        expandedCard = null;
+    }
 }

@@ -3,7 +3,7 @@
    "Focused Learning" — subtle, helpful, never distracting
    ============================================ */
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, Flip);
 
 /* ---------- Respect prefers-reduced-motion ---------- */
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
