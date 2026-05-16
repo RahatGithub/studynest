@@ -81,33 +81,21 @@ def home(request):
     from accounts.models import User
     avatars = []
 
-    # 1. Users with profile pictures
-    users_with_pic = User.objects.exclude(profile_picture='').exclude(profile_picture__isnull=True)[:10]
-    for u in users_with_pic:
-        avatars.append({'type': 'image', 'src': u.profile_picture.url})
+    # 1. Real users — use their name initial as letter avatar
+    real_users = User.objects.all()[:10]
+    for u in real_users:
+        letter = (u.first_name[0] if u.first_name else u.username[0]).upper()
+        avatars.append({'type': 'letter', 'letter': letter})
 
-    # 2. Users without profile pictures (letter avatars)
-    if len(avatars) < 10:
-        remaining = 10 - len(avatars)
-        users_without_pic = (
-            User.objects.filter(Q(profile_picture='') | Q(profile_picture__isnull=True))[:remaining]
-        )
-        for u in users_without_pic:
-            letter = (u.first_name[0] if u.first_name else u.username[0]).upper()
-            avatars.append({'type': 'letter', 'letter': letter})
-
-    # 3. Filler random-letter avatars
+    # 2. Filler random-letter avatars if not enough users
     while len(avatars) < 10:
         avatars.append({'type': 'letter', 'letter': random.choice(string.ascii_uppercase)})
 
-    # Assign unique colors to letter avatars
+    # Assign unique colors to all avatars
     color_pool = AVATAR_COLORS[:]
     random.shuffle(color_pool)
-    color_idx = 0
-    for av in avatars:
-        if av['type'] == 'letter':
-            av['color'] = color_pool[color_idx % len(color_pool)]
-            color_idx += 1
+    for i, av in enumerate(avatars):
+        av['color'] = color_pool[i % len(color_pool)]
 
     random.shuffle(avatars)
 

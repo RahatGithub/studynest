@@ -755,9 +755,6 @@ h4 { font-size: 1.25rem; }
     margin-left: 0;
 }
 
-.avatar-circle-img {
-    object-fit: cover;
-}
 
 .proof-text {
     font-size: 0.85rem;
