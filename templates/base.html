@@ -86,17 +86,44 @@
 
     <!-- App Footer -->
     <footer class="app-footer">
-        <div class="app-footer-inner">
-            <div class="app-footer-brand">StudyNest</div>
-            <p class="app-footer-tagline">Built for focused learners.</p>
-            <div class="app-footer-links">
-                <a href="{% url 'courses:home' %}">Home</a>
-                <a href="{% url 'courses:course_list' %}">Courses</a>
-                <a href="#" >About</a>
-                <a href="#">Privacy</a>
-                <a href="#">Terms</a>
+        <div class="app-footer-accent"></div>
+        <div class="app-footer-main">
+            <div class="container-app">
+                <div class="app-footer-grid">
+                    <!-- Left: Brand -->
+                    <div class="app-footer-brand-col">
+                        <a href="{% url 'courses:home' %}" class="app-footer-wordmark">StudyNest</a>
+                        <p class="app-footer-tagline">Built for focused learners.</p>
+                        <p class="app-footer-origin">Made with care in Bangladesh</p>
+                    </div>
+                    <!-- Middle: Navigation -->
+                    <div class="app-footer-col">
+                        <h5 class="app-footer-col-title">Explore</h5>
+                        <a href="{% url 'courses:home' %}" class="app-footer-link">Home</a>
+                        <a href="{% url 'courses:course_list' %}" class="app-footer-link">Browse Courses</a>
+                        <a href="#" class="app-footer-link">About</a>
+                        <a href="#" class="app-footer-link">Contact</a>
+                    </div>
+                    <!-- Right: Legal + Social -->
+                    <div class="app-footer-col">
+                        <h5 class="app-footer-col-title">More</h5>
+                        <a href="#" class="app-footer-link">Privacy Policy</a>
+                        <a href="#" class="app-footer-link">Terms of Service</a>
+                        <a href="#" class="app-footer-link">Help Center</a>
+                        <div class="app-footer-socials">
+                            <a href="#" class="app-footer-social" aria-label="GitHub"><i class="bi bi-github"></i></a>
+                            <a href="#" class="app-footer-social" aria-label="Twitter"><i class="bi bi-twitter-x"></i></a>
+                            <a href="#" class="app-footer-social" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <p class="app-footer-copy">&copy; 2026 StudyNest. All rights reserved.</p>
+        </div>
+        <div class="app-footer-bottom">
+            <div class="container-app app-footer-bottom-inner">
+                <span class="app-footer-copy">&copy; {% now "Y" %} StudyNest. All rights reserved.</span>
+                <span class="app-footer-status"><span class="status-dot"></span> All systems operational</span>
+            </div>
         </div>
     </footer>
 

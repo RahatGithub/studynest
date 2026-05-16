@@ -104,10 +104,27 @@ function initMobileNav() {
     });
 }
 
+/* ---------- Footer scroll entrance ---------- */
+function initFooterEntrance() {
+    const footer = document.querySelector('.app-footer-grid');
+    if (!footer) return;
+    const cols = footer.children;
+    if (!cols.length) return;
+    gsap.from(cols, {
+        opacity: 0,
+        y: 20,
+        duration: 0.5,
+        stagger: 0.1,
+        ease: 'power2.out',
+        scrollTrigger: { trigger: footer, start: 'top 90%' },
+    });
+}
+
 /* ---------- Init all ---------- */
 document.addEventListener('DOMContentLoaded', () => {
     initFadeUpElements();
     initStaggerGrids();
     initNavbarScroll();
     initMobileNav();
+    initFooterEntrance();
 });
