@@ -63,16 +63,21 @@ function initMessyDeck(cards, container) {
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const flipDuration = prefersReduced ? 0.01 : 0.6;
 
-    // Generate deck positions dynamically for N cards
+    // Fan positions: rotation around bottom-center pivot (transform-origin set in CSS)
     const n = cards.length;
-    const deckPositions = cards.map((_, i) => ({
-        rotation: 3 + i * 2,
-        x: i * 8,
-        y: i * 5,
-        zIndex: n - i,
-    }));
+    const mid = (n - 1) / 2;
+    const spread = 8; // degrees between cards
+    const deckPositions = cards.map((_, i) => {
+        const offset = i - mid; // -2, -1, 0, 1, 2 for 5 cards
+        return {
+            rotation: offset * spread,
+            x: 0,
+            y: 0,
+            zIndex: n - Math.abs(Math.round(offset)), // center highest
+        };
+    });
 
-    // Set initial deck positions
+    // Set initial fan positions
     cards.forEach((card, i) => {
         const pos = deckPositions[i];
         gsap.set(card, {
@@ -84,13 +89,13 @@ function initMessyDeck(cards, container) {
         });
     });
 
-    // Entrance: stagger fade in from slight offset
+    // Entrance: stagger fade in
     gsap.from(cards, {
         opacity: 0,
-        y: '+=30',
-        scale: 0.9,
+        y: '+=40',
+        scale: 0.85,
         duration: 0.7,
-        stagger: 0.12,
+        stagger: 0.1,
         ease: 'power3.out',
         delay: 0.3,
     });
@@ -98,26 +103,25 @@ function initMessyDeck(cards, container) {
     // Track expanded state
     let expandedCard = null;
 
-    // --- Hover: glow + lift ---
-    if (!prefersReduced) {
-        cards.forEach(card => {
-            card.addEventListener('mouseenter', () => {
-                if (expandedCard) return;
-                gsap.to(card, { scale: 1.02, y: '-=4', duration: 0.25, ease: 'power2.out', overwrite: 'auto' });
-            });
-            card.addEventListener('mouseleave', () => {
-                if (expandedCard) return;
-                const i = cards.indexOf(card);
-                gsap.to(card, {
-                    scale: 1,
-                    y: deckPositions[i].y,
-                    duration: 0.25,
-                    ease: 'power2.out',
-                    overwrite: 'auto',
-                });
-            });
+    // --- Hover: lift + glow + z-index raise ---
+    cards.forEach(card => {
+        card.addEventListener('mouseenter', () => {
+            if (expandedCard) return;
+            card.classList.add('hovered');
+            if (!prefersReduced) {
+                gsap.to(card, { y: -20, scale: 1.05, zIndex: n + 1, duration: 0.25, ease: 'power2.out', overwrite: 'auto' });
+            }
         });
-    }
+        card.addEventListener('mouseleave', () => {
+            if (expandedCard) return;
+            card.classList.remove('hovered');
+            const i = cards.indexOf(card);
+            const pos = deckPositions[i];
+            if (!prefersReduced) {
+                gsap.to(card, { y: pos.y, scale: 1, zIndex: pos.zIndex, duration: 0.25, ease: 'power2.out', overwrite: 'auto' });
+            }
+        });
+    });
 
     // Elements
     const heroSection = document.getElementById('home-hero');
