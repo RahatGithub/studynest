@@ -1,0 +1,36 @@
+<a href="{% url 'courses:course_detail' course.slug %}" class="course-card">
+    <div class="course-card-img">
+        {% if course.thumbnail %}
+            <img src="{{ course.thumbnail.url }}" alt="{{ course.title }}" loading="lazy">
+        {% else %}
+            <div class="course-card-placeholder">
+                <span>{{ course.title|truncatechars:2 }}</span>
+            </div>
+        {% endif %}
+        {% if course.category %}
+            <span class="course-card-cat">{{ course.category.name }}</span>
+        {% endif %}
+        {% if course.course_type == 'free' %}
+            <span class="course-card-price course-card-price-free">Free</span>
+        {% else %}
+            <span class="course-card-price course-card-price-paid">&#2547; {{ course.price|floatformat:0 }}</span>
+        {% endif %}
+    </div>
+    <div class="course-card-content">
+        <h4 class="course-card-title">{{ course.title }}</h4>
+        <p class="course-card-desc">{{ course.description|truncatewords:15 }}</p>
+        <div class="course-card-tutor">
+            {% if course.tutor.profile_picture %}
+                <img src="{{ course.tutor.profile_picture.url }}" alt="{{ course.tutor.username }}" class="course-card-avatar">
+            {% else %}
+                <span class="course-card-avatar-placeholder">{{ course.tutor.username|first|upper }}</span>
+            {% endif %}
+            <span class="course-card-tutor-name">
+                {% if course.tutor.first_name %}{{ course.tutor.first_name }} {{ course.tutor.last_name }}{% else %}{{ course.tutor.username }}{% endif %}
+            </span>
+        </div>
+    </div>
+    <div class="course-card-reveal">
+        <span>View course <i class="bi bi-arrow-right"></i></span>
+    </div>
+</a>
