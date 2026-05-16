@@ -7,10 +7,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const carousel = document.getElementById('cat-carousel');
     if (!section || !carousel) return;
 
-    const cards = gsap.utils.toArray('.cat-card');
-    const accents = ['indigo', 'sage', 'amber', 'rose', 'teal', 'violet'];
+    const cards = carousel.querySelectorAll('.cat-card');
+    const accents = ['amber', 'sage', 'rose', 'red', 'teal', 'indigo'];
 
-    // Icon mapping based on common category slugs
+    // Icon mapping
     const iconMap = {
         'programming': 'bi-code-slash',
         'development': 'bi-code-slash',
@@ -22,30 +22,26 @@ document.addEventListener('DOMContentLoaded', () => {
         'languages': 'bi-translate',
         'science': 'bi-flask',
         'math': 'bi-calculator',
-        'mathematics': 'bi-calculator',
         'music': 'bi-music-note-beamed',
-        'art': 'bi-brush',
         'photography': 'bi-camera',
         'health': 'bi-heart-pulse',
-        'fitness': 'bi-activity',
         'finance': 'bi-currency-dollar',
         'data-science': 'bi-bar-chart-line',
         'ai': 'bi-robot',
         'machine-learning': 'bi-cpu',
     };
 
-    // Assign accent colors and fix icons
+    // Assign accents and icons
     cards.forEach((card, i) => {
-        const accent = accents[i % accents.length];
-        card.setAttribute('data-accent', accent);
+        card.setAttribute('data-accent', accents[i % accents.length]);
 
         const iconEl = card.querySelector('.cat-card-icon i');
         if (iconEl) {
-            const cardLink = card.getAttribute('href') || '';
-            const slug = cardLink.split('category=')[1] || '';
-            const matchedIcon = iconMap[slug];
-            if (matchedIcon) {
-                iconEl.className = 'bi ' + matchedIcon;
+            const href = card.getAttribute('href') || '';
+            const slug = href.split('category=')[1] || '';
+            const matched = iconMap[slug];
+            if (matched) {
+                iconEl.className = 'bi ' + matched;
             } else {
                 const defaults = ['bi-book', 'bi-lightbulb', 'bi-star', 'bi-grid', 'bi-layers', 'bi-box'];
                 iconEl.className = 'bi ' + defaults[i % defaults.length];
@@ -53,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- Carousel navigation arrows ---
+    // Arrow navigation
     const btnLeft = section.querySelector('.cat-carousel-btn-left');
     const btnRight = section.querySelector('.cat-carousel-btn-right');
 
@@ -66,49 +62,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (btnLeft && btnRight) {
         btnLeft.addEventListener('click', () => {
-            carousel.scrollBy({ left: -280, behavior: 'smooth' });
+            carousel.scrollBy({ left: -260, behavior: 'smooth' });
         });
         btnRight.addEventListener('click', () => {
-            carousel.scrollBy({ left: 280, behavior: 'smooth' });
+            carousel.scrollBy({ left: 260, behavior: 'smooth' });
         });
         carousel.addEventListener('scroll', updateArrows, { passive: true });
         updateArrows();
-    }
-
-    // --- Scroll-into-view entrance animation ---
-    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    if (!prefersReduced && cards.length) {
-        gsap.from(cards, {
-            opacity: 0,
-            y: 20,
-            duration: 0.5,
-            stagger: 0.08,
-            ease: 'power2.out',
-            scrollTrigger: {
-                trigger: carousel,
-                start: 'top 85%',
-            },
-        });
-    }
-
-    // Section header entrance
-    if (!prefersReduced) {
-        gsap.from('.home-cat-eyebrow', {
-            opacity: 0, y: 10, duration: 0.4,
-            scrollTrigger: { trigger: section, start: 'top 80%' },
-        });
-        gsap.from('.home-cat-title', {
-            opacity: 0, y: 15, duration: 0.5, delay: 0.1,
-            scrollTrigger: { trigger: section, start: 'top 80%' },
-        });
-        gsap.from('.home-cat-sub', {
-            opacity: 0, y: 10, duration: 0.4, delay: 0.2,
-            scrollTrigger: { trigger: section, start: 'top 80%' },
-        });
-        gsap.from('.home-cat-viewall', {
-            opacity: 0, x: -10, duration: 0.4, delay: 0.3,
-            scrollTrigger: { trigger: section, start: 'top 80%' },
-        });
     }
 });
