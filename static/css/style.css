@@ -612,16 +612,17 @@ h4 { font-size: 1.25rem; }
     position: relative;
 }
 
-/* Modal backdrop */
+/* Modal backdrop (inside .home-hero-visual) */
 .card-modal-backdrop {
     display: none;
     position: absolute;
     inset: 0;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-    z-index: 999;
+    background: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    z-index: 50;
     opacity: 0;
+    border-radius: var(--radius-lg);
 }
 
 .card-modal-backdrop.active {
@@ -817,6 +818,7 @@ h4 { font-size: 1.25rem; }
 .preview-card {
     position: absolute;
     width: 220px;
+    aspect-ratio: 5 / 7;
     bottom: 20px;
     left: 50%;
     margin-left: -110px;
@@ -829,6 +831,8 @@ h4 { font-size: 1.25rem; }
     will-change: transform, opacity;
     transform-origin: 50% 180%;
     transition: box-shadow 0.25s ease, border-color 0.25s ease;
+    display: flex;
+    flex-direction: column;
 }
 
 .preview-card.hovered {
@@ -861,17 +865,18 @@ h4 { font-size: 1.25rem; }
     color: var(--color-text);
 }
 
-/* Expanded state — centered modal over hero */
+/* Expanded state — fills right column container */
 .preview-card.expanded {
     position: absolute;
-    width: min(680px, 90%);
-    max-height: 85vh;
-    top: 50%;
-    left: 50%;
-    bottom: auto;
+    inset: 0;
+    width: auto;
+    height: auto;
+    aspect-ratio: auto;
+    bottom: 0;
+    left: 0;
     margin-left: 0;
     transform-origin: 50% 50%;
-    z-index: 1000 !important;
+    z-index: 100 !important;
     cursor: default;
     box-shadow: 0 25px 60px rgba(0, 0, 0, 0.25);
     border-color: var(--color-border);
@@ -924,7 +929,8 @@ h4 { font-size: 1.25rem; }
 }
 
 .preview-card-img {
-    height: 120px;
+    height: 100px;
+    flex-shrink: 0;
     background: linear-gradient(135deg, var(--color-primary-soft), rgba(79, 70, 229, 0.15));
     display: flex;
     align-items: center;
@@ -932,7 +938,10 @@ h4 { font-size: 1.25rem; }
 }
 
 .preview-card-body {
-    padding: 1rem 1.25rem;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+    padding: 0.75rem 1rem;
 }
 
 .preview-card-tag {
@@ -949,10 +958,14 @@ h4 { font-size: 1.25rem; }
 }
 
 .preview-card-title {
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 700;
     color: var(--color-text);
     margin-bottom: 0.5rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .preview-card-tutor {

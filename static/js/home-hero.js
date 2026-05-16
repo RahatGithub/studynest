@@ -124,7 +124,6 @@ function initMessyDeck(cards, container) {
     });
 
     // Elements
-    const heroSection = document.getElementById('home-hero');
     const backdrop = document.getElementById('card-modal-backdrop');
 
     // --- Click to expand ---
@@ -165,17 +164,12 @@ function initMessyDeck(cards, container) {
         expandedCard = card;
         const otherCards = cards.filter(c => c !== card);
 
-        // Capture state before DOM changes
+        // Capture state before changes
         const state = Flip.getState(card);
 
-        // Move card to hero section root so it can center over everything
-        heroSection.appendChild(card);
-
-        // Add expanded class (CSS positions it at top:50% left:50%)
+        // Add expanded class (CSS: inset:0 fills the .home-hero-visual container)
         card.classList.add('expanded');
-
-        // GSAP centers it (avoids CSS transform conflict with Flip)
-        gsap.set(card, { xPercent: -50, yPercent: -50, rotation: 0 });
+        gsap.set(card, { rotation: 0 });
 
         // Animate with Flip
         Flip.from(state, {
@@ -199,8 +193,7 @@ function initMessyDeck(cards, container) {
             gsap.from(expandedContent, { opacity: 0, y: 15, duration: 0.4, ease: 'power2.out', delay: flipDuration * 0.5 });
         }
 
-        // Lock body scroll + listen for Escape
-        document.body.style.overflow = 'hidden';
+        // Listen for Escape
         document.addEventListener('keydown', onEscape);
     }
 
@@ -210,14 +203,10 @@ function initMessyDeck(cards, container) {
         // Capture expanded state
         const state = Flip.getState(card);
 
-        // Remove expanded class and centering
+        // Remove expanded class
         card.classList.remove('expanded');
-        gsap.set(card, { clearProps: 'xPercent,yPercent' });
 
-        // Move card back into the visual container
-        container.appendChild(card);
-
-        // Restore deck position
+        // Restore fan position
         const i = cards.indexOf(card);
         const pos = deckPositions[i];
         gsap.set(card, { rotation: pos.rotation, x: pos.x, y: pos.y, zIndex: pos.zIndex });
@@ -244,8 +233,7 @@ function initMessyDeck(cards, container) {
             });
         });
 
-        // Unlock body scroll + remove Escape listener
-        document.body.style.overflow = '';
+        // Remove Escape listener
         document.removeEventListener('keydown', onEscape);
 
         expandedCard = null;

@@ -6,7 +6,6 @@
 {% block content %}
 <!-- Hero Section -->
 <section class="home-hero" id="home-hero">
-    <div class="card-modal-backdrop" id="card-modal-backdrop"></div>
     <div class="container">
         <div class="row align-items-center">
             <!-- Left column: Content -->
@@ -52,6 +51,7 @@
             <!-- Right column: Messy deck card stack -->
             <div class="col-lg-5 d-none d-lg-block">
                 <div class="home-hero-visual" id="hero-visual">
+                    <div class="card-modal-backdrop" id="card-modal-backdrop"></div>
                     {% for c in hero_courses %}
                     <div class="preview-card" data-card-index="{{ forloop.counter0 }}">
                         <button class="preview-card-close" aria-label="Close"><i class="bi bi-x-lg"></i></button>
