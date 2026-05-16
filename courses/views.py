@@ -9,7 +9,7 @@ from django.utils import timezone
 
 def home(request):
     featured_courses = Course.objects.filter(is_published=True).select_related('tutor', 'category').order_by('-created_at')[:6]
-    categories = Category.objects.all()
+    categories = Category.objects.annotate(course_count=Count('courses', filter=Q(courses__is_published=True)))
     context = {
         'featured_courses': featured_courses,
         'categories': categories,

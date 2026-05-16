@@ -77,20 +77,31 @@
 </section>
 
 <!-- Categories Section -->
-<section class="py-5 bg-light">
+<section class="home-categories" id="home-categories">
     <div class="container">
-        <h2 class="text-center mb-4">Explore Categories</h2>
-        <div class="row g-3">
+        <div class="home-cat-header">
+            <div>
+                <p class="home-cat-eyebrow">Explore</p>
+                <h2 class="home-cat-title">Browse by <span class="font-serif" style="font-style: italic;">category</span>.</h2>
+                <p class="home-cat-sub">Find your path among hundreds of expert-led courses.</p>
+            </div>
+            <a href="{% url 'courses:course_list' %}" class="home-cat-viewall d-none d-md-inline-flex">View all courses <span>&rarr;</span></a>
+        </div>
+        <div class="home-cat-grid" id="home-cat-grid">
             {% for category in categories %}
-                <div class="col-md-4 col-lg-2">
-                    <a href="{% url 'courses:course_list' %}?category={{ category.slug }}" 
-                       class="text-decoration-none">
-                        <div class="card h-100 text-center shadow-sm">
-                            <div class="card-body">
-                                <h6 class="card-title">{{ category.name }}</h6>
-                            </div>
-                        </div>
-                    </a>
+                <a href="{% url 'courses:course_list' %}?category={{ category.slug }}" class="cat-card" data-index="{{ forloop.counter0 }}">
+                    <div class="cat-card-icon">
+                        <i class="bi bi-{{ category.slug|default:'book' }}"></i>
+                    </div>
+                    <div class="cat-card-body">
+                        <h4 class="cat-card-name">{{ category.name }}</h4>
+                        <span class="cat-card-count">{{ category.course_count }} course{{ category.course_count|pluralize }}</span>
+                    </div>
+                    <span class="cat-card-arrow"><i class="bi bi-arrow-right"></i></span>
+                </a>
+            {% empty %}
+                <div class="cat-empty">
+                    <p>No categories yet. Check back soon!</p>
                 </div>
             {% endfor %}
         </div>
@@ -171,4 +182,5 @@
 
 {% block extra_js %}
 <script src="{% static 'js/home-hero.js' %}"></script>
+<script src="{% static 'js/home-categories.js' %}"></script>
 {% endblock %}
