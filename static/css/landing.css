@@ -314,7 +314,7 @@ h1, h2, h3 {
 
 .scramble-word {
     font-family: var(--font-heading);
-    font-size: clamp(2rem, 3.5vw, 2.8rem);
+    font-size: clamp(2.25rem, 4vw, 3.05rem);
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.08em;

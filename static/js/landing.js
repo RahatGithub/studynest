@@ -50,12 +50,7 @@ window.addEventListener('resize', () => {
    HERO — Cinematic Entrance
    =========================================== */
 (function initHeroAnimations() {
-    const heroTitle = document.getElementById('hero-title');
     const heroSubtitle = document.getElementById('hero-subtitle');
-    if (!heroTitle) return;
-
-    const splitTitle = new SplitText(heroTitle, { type: 'chars,words', charsClass: 'char', wordsClass: 'word' });
-    gsap.set(splitTitle.chars, { y: 100, opacity: 0, rotateX: -90, transformOrigin: '50% 50% -50px', filter: 'blur(4px)' });
 
     let splitSub = null;
     if (heroSubtitle) {
@@ -66,22 +61,12 @@ window.addEventListener('resize', () => {
     const tl = gsap.timeline({ defaults: { ease: 'power3.out', force3D: true }, delay: 0.3 });
     tl.to('.hero-orb', { opacity: 1, duration: 2, stagger: 0.3, ease: 'power2.out' });
     tl.to('.hero-scramble-words', { opacity: 1, y: 0, duration: 0.7 }, 0.2);
-    tl.to(splitTitle.chars, { y: 0, opacity: 1, rotateX: 0, filter: 'blur(0px)', duration: 1, stagger: 0.03, ease: 'back.out(1.7)' }, 0.5);
-    if (splitSub) tl.to(splitSub.words, { y: 0, opacity: 1, duration: 0.6, stagger: 0.04, ease: 'power2.out' }, 1.2);
-    tl.to('.hero-ctas', { opacity: 1, y: 0, duration: 0.7, ease: 'back.out(1.4)' }, 1.5);
-    tl.to('.hero-stats', { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' }, 1.7);
+    if (splitSub) tl.to(splitSub.words, { y: 0, opacity: 1, duration: 0.6, stagger: 0.04, ease: 'power2.out' }, 0.8);
+    tl.to('.hero-ctas', { opacity: 1, y: 0, duration: 0.7, ease: 'back.out(1.4)' }, 1.2);
+    tl.to('.hero-stats', { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' }, 1.4);
     gsap.set('.hero-card', { y: 50, opacity: 0, scale: 0.9 });
     tl.to('.hero-card', { opacity: 1, y: 0, scale: 1, duration: 0.8, stagger: 0.15, ease: 'back.out(1.5)' }, 1.0);
-    tl.to('.scroll-indicator', { opacity: 1, duration: 0.6 }, 2.0);
-
-    tl.call(() => {
-        const shine = document.createElement('div');
-        shine.style.cssText = 'position:absolute;top:0;left:-100%;width:50%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.15),transparent);pointer-events:none;';
-        heroTitle.style.position = 'relative';
-        heroTitle.style.overflow = 'hidden';
-        heroTitle.appendChild(shine);
-        gsap.to(shine, { left: '150%', duration: 1.2, ease: 'power2.inOut', onComplete: () => shine.remove() });
-    }, null, null, 2.5);
+    tl.to('.scroll-indicator', { opacity: 1, duration: 0.6 }, 1.8);
 })();
 
 /* --- Scramble Words Animation --- */
