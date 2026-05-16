@@ -30,11 +30,13 @@
                 <!-- Social proof -->
                 <div class="home-hero-proof" id="hero-proof">
                     <div class="avatar-stack">
-                        <span class="avatar-circle" style="background:#4F46E5;">A</span>
-                        <span class="avatar-circle" style="background:#10B981;">S</span>
-                        <span class="avatar-circle" style="background:#F59E0B;">K</span>
-                        <span class="avatar-circle" style="background:#EC4899;">M</span>
-                        <span class="avatar-circle" style="background:#6366F1;">R</span>
+                        {% for av in hero_avatars %}
+                        {% if av.type == 'image' %}
+                        <img src="{{ av.src }}" alt="" class="avatar-circle avatar-circle-img">
+                        {% else %}
+                        <span class="avatar-circle" style="background:{{ av.color }};">{{ av.letter }}</span>
+                        {% endif %}
+                        {% endfor %}
                     </div>
                     <span class="proof-text">Join <strong>10,000+</strong> learners advancing their skills</span>
                 </div>

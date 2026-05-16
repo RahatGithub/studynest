@@ -751,6 +751,11 @@ h4 { font-size: 1.25rem; }
     margin-left: 0;
 }
 
+.avatar-circle-img {
+    object-fit: cover;
+    font-size: 0;
+}
+
 .proof-text {
     font-size: 0.85rem;
     color: var(--color-text-muted);

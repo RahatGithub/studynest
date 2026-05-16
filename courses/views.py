@@ -1,11 +1,21 @@
+import random
+import string
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Q, Count, Avg
 from django.urls import reverse
+from django.conf import settings
 from .models import Course, Category, Enrollment, Module, Lesson, LessonProgress, Review
 from .forms import CourseForm, ModuleForm, LessonForm, ReviewForm
 from django.utils import timezone
+
+AVATAR_COLORS = [
+    '#6366f1', '#0d9488', '#f97316', '#ec4899', '#f59e0b',
+    '#10b981', '#0ea5e9', '#8b5cf6', '#ef4444', '#14b8a6',
+    '#e11d48', '#7c3aed', '#d97706', '#06b6d4', '#be185d',
+]
 
 def home(request):
     featured_courses = Course.objects.filter(is_published=True).select_related('tutor', 'category').order_by('-created_at')[:6]
@@ -67,11 +77,46 @@ def home(request):
             },
         ]
 
+    # Build 10 avatar items for social proof stack
+    from accounts.models import User
+    avatars = []
+
+    # 1. Users with profile pictures
+    users_with_pic = User.objects.exclude(profile_picture='').exclude(profile_picture__isnull=True)[:10]
+    for u in users_with_pic:
+        avatars.append({'type': 'image', 'src': u.profile_picture.url})
+
+    # 2. Users without profile pictures (letter avatars)
+    if len(avatars) < 10:
+        remaining = 10 - len(avatars)
+        users_without_pic = (
+            User.objects.filter(Q(profile_picture='') | Q(profile_picture__isnull=True))[:remaining]
+        )
+        for u in users_without_pic:
+            letter = (u.first_name[0] if u.first_name else u.username[0]).upper()
+            avatars.append({'type': 'letter', 'letter': letter})
+
+    # 3. Filler random-letter avatars
+    while len(avatars) < 10:
+        avatars.append({'type': 'letter', 'letter': random.choice(string.ascii_uppercase)})
+
+    # Assign unique colors to letter avatars
+    color_pool = AVATAR_COLORS[:]
+    random.shuffle(color_pool)
+    color_idx = 0
+    for av in avatars:
+        if av['type'] == 'letter':
+            av['color'] = color_pool[color_idx % len(color_pool)]
+            color_idx += 1
+
+    random.shuffle(avatars)
+
     context = {
         'featured_courses': featured_courses,
         'categories': categories,
         'hero_courses': hero_courses,
         'use_real_courses': use_real_courses,
+        'hero_avatars': avatars,
     }
     return render(request, 'courses/home.html', context)
 
