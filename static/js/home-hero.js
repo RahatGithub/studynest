@@ -101,31 +101,31 @@ function initCardCarousel(cards) {
         slots = [rising, toMiddle, toBack];
 
         const tl = gsap.timeline({
-            defaults: { duration: 0.8, ease: 'power2.inOut' },
+            defaults: { duration: 1.2, ease: 'power2.inOut' },
             onComplete: () => gsap.delayedCall(1.5, cycle),
         });
 
         // Rising card: lift up past the stack, scale to full, land at front
         tl.to(rising, {
             keyframes: [
-                { y: -40, scale: 1.0, x: 0, opacity: 1, duration: 0.4, ease: 'power2.in' },
-                { y: 0, duration: 0.4, ease: 'power2.out' },
+                { y: -40, scale: 1.0, x: 0, opacity: 1, duration: 0.6, ease: 'power2.in' },
+                { y: 0, duration: 0.6, ease: 'power2.out' },
             ],
         }, 0);
         // Flip z-index to top at the halfway mark
-        tl.set(rising, { zIndex: positions[0].zIndex }, 0.4);
+        tl.set(rising, { zIndex: positions[0].zIndex }, 0.6);
 
         // Previous front → middle
         tl.to(toMiddle, {
             ...positions[1],
-            duration: 0.8,
+            duration: 1.2,
         }, 0);
-        tl.set(toMiddle, { zIndex: positions[1].zIndex }, 0.4);
+        tl.set(toMiddle, { zIndex: positions[1].zIndex }, 0.6);
 
         // Previous middle → back
         tl.to(toBack, {
             ...positions[2],
-            duration: 0.8,
+            duration: 1.2,
         }, 0);
         tl.set(toBack, { zIndex: positions[2].zIndex }, 0);
     }
