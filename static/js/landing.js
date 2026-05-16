@@ -2,7 +2,7 @@
    StudyNest Landing Page — GSAP Animations
    ============================================ */
 
-gsap.registerPlugin(ScrollTrigger, ScrollSmoother, SplitText, Flip, Observer, ScrollToPlugin);
+gsap.registerPlugin(ScrollTrigger, ScrollSmoother, SplitText, Flip, Observer, ScrollToPlugin, ScrambleTextPlugin);
 
 gsap.ticker.lagSmoothing(1000, 16);
 
@@ -65,7 +65,7 @@ window.addEventListener('resize', () => {
 
     const tl = gsap.timeline({ defaults: { ease: 'power3.out', force3D: true }, delay: 0.3 });
     tl.to('.hero-orb', { opacity: 1, duration: 2, stagger: 0.3, ease: 'power2.out' });
-    tl.to('.hero-eyebrow', { opacity: 1, y: 0, duration: 0.7 }, 0.2);
+    tl.to('.hero-scramble-words', { opacity: 1, y: 0, duration: 0.7 }, 0.2);
     tl.to(splitTitle.chars, { y: 0, opacity: 1, rotateX: 0, filter: 'blur(0px)', duration: 1, stagger: 0.03, ease: 'back.out(1.7)' }, 0.5);
     if (splitSub) tl.to(splitSub.words, { y: 0, opacity: 1, duration: 0.6, stagger: 0.04, ease: 'power2.out' }, 1.2);
     tl.to('.hero-ctas', { opacity: 1, y: 0, duration: 0.7, ease: 'back.out(1.4)' }, 1.5);
@@ -82,6 +82,43 @@ window.addEventListener('resize', () => {
         heroTitle.appendChild(shine);
         gsap.to(shine, { left: '150%', duration: 1.2, ease: 'power2.inOut', onComplete: () => shine.remove() });
     }, null, null, 2.5);
+})();
+
+/* --- Scramble Words Animation --- */
+(function initScrambleWords() {
+    const words = ['Enroll', 'Learn', 'Practice', 'Grow'];
+    const slots = words.map((_, i) => document.getElementById(`scramble-word-${i}`));
+    if (!slots[0]) return;
+
+    // Reduced motion: show all words statically
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        words.forEach((word, i) => { slots[i].textContent = word; });
+        return;
+    }
+
+    const scrambleTl = gsap.timeline({ repeat: -1, delay: 1 });
+
+    // Scramble each word in sequence
+    words.forEach((word, i) => {
+        scrambleTl.to(slots[i], {
+            duration: 0.8,
+            scrambleText: {
+                text: word,
+                chars: 'XO!@#$%',
+                revealDelay: 0.3,
+                speed: 0.4,
+            },
+            ease: 'none',
+        });
+    });
+
+    // Hold all 4 visible for 1 second
+    scrambleTl.to({}, { duration: 1 });
+
+    // Clear all slots
+    scrambleTl.call(() => {
+        slots.forEach(slot => { slot.textContent = ''; });
+    });
 })();
 
 /* --- Floating orbs --- */

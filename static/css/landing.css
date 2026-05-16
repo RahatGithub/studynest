@@ -303,6 +303,33 @@ h1, h2, h3 {
     transform: translateY(30px);
 }
 
+.hero-scramble-words {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(4 * 3.2rem);
+    margin-bottom: 1.25rem;
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+.scramble-word {
+    font-family: var(--font-heading);
+    font-size: clamp(2rem, 3.5vw, 2.8rem);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent-teal-light);
+    line-height: 3.2rem;
+    min-height: 3.2rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hero-scramble-words {
+        opacity: 1;
+        transform: none;
+    }
+}
+
 .hero-headline-wrapper {
     margin-bottom: 1.5rem;
     overflow: visible;

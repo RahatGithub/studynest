@@ -49,7 +49,12 @@
         <div class="hero-grid">
             <!-- Left column: Text content -->
             <div class="hero-text">
-                <p class="hero-eyebrow">The smarter way to learn</p>
+                <div class="hero-scramble-words" id="hero-scramble-words" aria-label="Enroll, Learn, Practice, Grow">
+                    <div class="scramble-word" id="scramble-word-0"></div>
+                    <div class="scramble-word" id="scramble-word-1"></div>
+                    <div class="scramble-word" id="scramble-word-2"></div>
+                    <div class="scramble-word" id="scramble-word-3"></div>
+                </div>
                 <div class="hero-headline-wrapper" style="perspective: 1000px;">
                     <h1 class="hero-title" id="hero-title">Master Anything. From Anywhere.</h1>
                 </div>
@@ -461,6 +466,7 @@
     <!-- Premium plugins via gsap-trial -->
     <script src="https://cdn.jsdelivr.net/npm/gsap-trial@3.12.7/dist/ScrollSmoother.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap-trial@3.12.7/dist/SplitText.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap-trial@3.12.7/dist/ScrambleTextPlugin.min.js"></script>
     <script src="{% static 'js/landing.js' %}"></script>
 </body>
 </html>
