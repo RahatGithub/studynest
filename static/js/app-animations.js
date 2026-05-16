@@ -5,6 +5,12 @@
 
 gsap.registerPlugin(ScrollTrigger);
 
+/* ---------- Respect prefers-reduced-motion ---------- */
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+if (prefersReducedMotion) {
+    gsap.globalTimeline.timeScale(20); // effectively instant
+}
+
 /* ---------- Default ScrollTrigger config ---------- */
 ScrollTrigger.defaults({
     toggleActions: 'play none none none',

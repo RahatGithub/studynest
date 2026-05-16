@@ -131,13 +131,43 @@
     </div>
 </section>
 
-<!-- CTA Section -->
+<!-- Instructor CTA Section -->
 {% if not user.is_authenticated %}
-<section class="py-5 bg-light">
-    <div class="container text-center">
-        <h2 class="mb-3">Become an Instructor</h2>
-        <p class="lead mb-4">Share your knowledge and earn money by teaching on StudyNest</p>
-        <a href="{% url 'accounts:signup_tutor' %}" class="btn btn-success btn-lg">Start Teaching Today</a>
+<section class="home-instructor" id="home-instructor">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 home-inst-content">
+                <p class="home-inst-eyebrow"><span class="hero-eyebrow-icon">&#10022;</span> For educators</p>
+                <h2 class="home-inst-title">
+                    Share what you know.<br>
+                    <span class="font-serif" style="font-style: italic;">Earn while you teach.</span>
+                </h2>
+                <p class="home-inst-body">Join hundreds of expert tutors building careers on StudyNest. Set your own pricing, schedule classes on your terms, and reach learners worldwide.</p>
+                <ul class="home-inst-checks">
+                    <li><i class="bi bi-check-circle-fill"></i> Keep up to 80% of your earnings</li>
+                    <li><i class="bi bi-check-circle-fill"></i> Built-in tools for classes, assignments, and certificates</li>
+                    <li><i class="bi bi-check-circle-fill"></i> Get discovered by 10,000+ active learners</li>
+                </ul>
+                <div class="home-inst-ctas">
+                    <a href="{% url 'accounts:signup_tutor' %}" class="btn-primary-app">Start Teaching Today</a>
+                    <a href="#" class="home-hero-link">Learn how it works <span>&rarr;</span></a>
+                </div>
+            </div>
+            <div class="col-lg-6 d-none d-lg-block">
+                <div class="home-inst-visual" id="inst-visual">
+                    <div class="inst-avatar inst-av-1">A</div>
+                    <div class="inst-avatar inst-av-2">S</div>
+                    <div class="inst-avatar inst-av-3">K</div>
+                    <div class="inst-avatar inst-av-4">M</div>
+                    <div class="inst-avatar inst-av-5">R</div>
+                    <div class="inst-avatar inst-av-6">J</div>
+                    <div class="inst-avatar inst-av-center">
+                        <i class="bi bi-person-video3"></i>
+                    </div>
+                    <div class="inst-stat-badge">342 tutors earning together</div>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
 {% endif %}
@@ -147,4 +177,5 @@
 <script src="{% static 'js/home-hero.js' %}"></script>
 <script src="{% static 'js/home-categories.js' %}"></script>
 <script src="{% static 'js/home-featured.js' %}"></script>
+<script src="{% static 'js/home-instructor.js' %}"></script>
 {% endblock %}

@@ -1238,6 +1238,181 @@ h4 { font-size: 1.25rem; }
     color: var(--color-text-muted);
 }
 
+/* ============================================
+   HOME PAGE — Instructor CTA Section
+   ============================================ */
+.home-instructor {
+    padding: 5rem 0;
+    background: var(--color-primary-soft);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Subtle bg dots pattern */
+.home-instructor::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle, rgba(79, 70, 229, 0.06) 1px, transparent 1px);
+    background-size: 20px 20px;
+    pointer-events: none;
+}
+
+.home-inst-content {
+    position: relative;
+    z-index: 2;
+}
+
+.home-inst-eyebrow {
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--color-text-muted);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.home-inst-title {
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--color-text);
+    margin-bottom: 1.25rem;
+}
+
+.home-inst-body {
+    font-size: 0.95rem;
+    color: var(--color-text-muted);
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+    max-width: 480px;
+}
+
+.home-inst-checks {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+}
+
+.home-inst-checks li {
+    font-size: 0.9rem;
+    color: var(--color-text);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.home-inst-checks i {
+    color: var(--color-success);
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+.home-inst-ctas {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+/* Visual: Avatar collage */
+.home-inst-visual {
+    position: relative;
+    height: 320px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.inst-avatar {
+    position: absolute;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: white;
+    box-shadow: var(--shadow-md);
+    border: 3px solid var(--color-bg-elevated);
+    will-change: transform;
+    opacity: 0;
+}
+
+.inst-av-1 { width: 48px; height: 48px; font-size: 0.85rem; background: #4F46E5; top: 15%; left: 20%; }
+.inst-av-2 { width: 40px; height: 40px; font-size: 0.75rem; background: #10B981; top: 10%; right: 30%; }
+.inst-av-3 { width: 44px; height: 44px; font-size: 0.8rem; background: #F59E0B; bottom: 25%; left: 15%; }
+.inst-av-4 { width: 36px; height: 36px; font-size: 0.7rem; background: #EC4899; top: 40%; right: 15%; }
+.inst-av-5 { width: 42px; height: 42px; font-size: 0.78rem; background: #6366F1; bottom: 15%; right: 25%; }
+.inst-av-6 { width: 38px; height: 38px; font-size: 0.72rem; background: #0D9488; top: 60%; left: 30%; }
+
+.inst-av-center {
+    width: 72px;
+    height: 72px;
+    font-size: 1.5rem;
+    background: var(--color-primary);
+    z-index: 2;
+}
+
+.inst-stat-badge {
+    position: absolute;
+    bottom: 12%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 0.5rem 1rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    box-shadow: var(--shadow-sm);
+    white-space: nowrap;
+    opacity: 0;
+}
+
+/* ============================================
+   ACCESSIBILITY & PERFORMANCE
+   ============================================ */
+
+/* Focus states */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    .app-main {
+        opacity: 1 !important;
+        transform: none !important;
+    }
+
+    .home-hero-eyebrow,
+    .home-hero-title,
+    .home-hero-sub,
+    .home-hero-search,
+    .home-hero-proof,
+    .home-hero-ctas,
+    .preview-card {
+        opacity: 1 !important;
+        transform: none !important;
+    }
+}
+
 /* ---------- Responsive ---------- */
 @media (max-width: 768px) {
     .app-nav-links {
@@ -1303,6 +1478,13 @@ h4 { font-size: 1.25rem; }
     /* Disable hover reveal on touch */
     .course-card-reveal {
         display: none;
+    }
+
+    /* Instructor CTA mobile */
+    .home-inst-ctas {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
     }
 }
 
