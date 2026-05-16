@@ -131,6 +131,21 @@ h1, h2, h3 {
     width: auto;
 }
 
+.landing-brand {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    font-style: italic;
+    color: #818cf8;
+    text-decoration: none;
+    transition: opacity var(--transition-fast);
+}
+
+.landing-brand:hover {
+    opacity: 0.8;
+    color: #818cf8;
+}
+
 .nav-menu {
     display: flex;
     align-items: center;
