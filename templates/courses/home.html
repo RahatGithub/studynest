@@ -32,9 +32,9 @@
                     <div class="avatar-stack">
                         {% for av in hero_avatars %}
                         {% if av.type == 'image' %}
-                        <img src="{{ av.src }}" alt="" class="avatar-circle avatar-circle-img">
+                        <img src="{{ av.src }}" alt="" class="avatar-circle avatar-circle-img" style="z-index:{{ forloop.revcounter }};">
                         {% else %}
-                        <span class="avatar-circle" style="background:{{ av.color }};">{{ av.letter }}</span>
+                        <span class="avatar-circle" style="background:{{ av.color }};z-index:{{ forloop.revcounter }};">{{ av.letter }}</span>
                         {% endif %}
                         {% endfor %}
                     </div>
