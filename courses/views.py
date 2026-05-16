@@ -10,9 +10,68 @@ from django.utils import timezone
 def home(request):
     featured_courses = Course.objects.filter(is_published=True).select_related('tutor', 'category').order_by('-created_at')[:6]
     categories = Category.objects.annotate(course_count=Count('courses', filter=Q(courses__is_published=True)))
+
+    # Hero card stack: 5 oldest published courses with stats
+    hero_qs = (
+        Course.objects.filter(is_published=True)
+        .select_related('tutor', 'category')
+        .annotate(
+            student_count=Count('enrollments', distinct=True),
+            avg_rating=Avg('reviews__rating'),
+            lesson_count=Count('modules__lessons', distinct=True),
+        )
+        .order_by('created_at')[:5]
+    )
+    hero_courses_list = list(hero_qs)
+
+    if len(hero_courses_list) >= 5:
+        hero_courses = hero_courses_list
+        use_real_courses = True
+    else:
+        use_real_courses = False
+        hero_courses = [
+            {
+                'title': 'Modern JavaScript', 'category_name': 'Web Development',
+                'tutor_name': 'Jane Smith', 'tutor_initial': 'J', 'tutor_bio': 'Senior frontend engineer specializing in modern JavaScript ecosystems.',
+                'avatar_bg': '#4F46E5', 'img_class': '', 'tag_class': '',
+                'student_count': 1240, 'avg_rating': 4.8, 'lesson_count': 12,
+                'description': 'Master ES6+, async patterns, closures, and the module system. Build real-world projects using modern tooling and best practices that top companies expect.',
+            },
+            {
+                'title': 'Python for Analytics', 'category_name': 'Data Science',
+                'tutor_name': 'K. Rahman', 'tutor_initial': 'K', 'tutor_bio': 'Data scientist and educator with 8 years of industry experience.',
+                'avatar_bg': '#F59E0B', 'img_class': 'gradient-green', 'tag_class': 'tag-green',
+                'student_count': 890, 'avg_rating': 4.6, 'lesson_count': 18,
+                'description': 'Learn pandas, NumPy, and matplotlib from scratch. Explore real datasets, build visualizations, and gain the analytical skills employers are hiring for right now.',
+            },
+            {
+                'title': 'Design Systems', 'category_name': 'UI/UX Design',
+                'tutor_name': 'Sarah Chen', 'tutor_initial': 'S', 'tutor_bio': 'Lead product designer at a top SaaS company, design systems advocate.',
+                'avatar_bg': '#EC4899', 'img_class': 'gradient-pink', 'tag_class': 'tag-pink',
+                'student_count': 670, 'avg_rating': 4.9, 'lesson_count': 15,
+                'description': 'Build scalable, consistent UI with tokens, components, and documentation. Learn the workflow used by teams at Figma, Stripe, and Linear to ship polished products faster.',
+            },
+            {
+                'title': 'Cloud Engineering', 'category_name': 'DevOps',
+                'tutor_name': 'Arif Hasan', 'tutor_initial': 'A', 'tutor_bio': 'AWS certified architect and cloud infrastructure consultant.',
+                'avatar_bg': '#0D9488', 'img_class': 'gradient-teal', 'tag_class': 'tag-teal',
+                'student_count': 520, 'avg_rating': 4.7, 'lesson_count': 20,
+                'description': 'Deploy, monitor, and scale applications on AWS and GCP. Learn Docker, Kubernetes, CI/CD pipelines, and infrastructure as code from real production scenarios.',
+            },
+            {
+                'title': 'Mobile App Development', 'category_name': 'Programming',
+                'tutor_name': 'Priya Sharma', 'tutor_initial': 'P', 'tutor_bio': 'Mobile developer with apps used by millions across iOS and Android.',
+                'avatar_bg': '#6366F1', 'img_class': 'gradient-violet', 'tag_class': 'tag-violet',
+                'student_count': 980, 'avg_rating': 4.5, 'lesson_count': 24,
+                'description': 'Build cross-platform mobile apps with React Native. Cover navigation, state management, native APIs, and publishing to the App Store and Google Play.',
+            },
+        ]
+
     context = {
         'featured_courses': featured_courses,
         'categories': categories,
+        'hero_courses': hero_courses,
+        'use_real_courses': use_real_courses,
     }
     return render(request, 'courses/home.html', context)
 

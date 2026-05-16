@@ -1015,7 +1015,45 @@ h4 { font-size: 1.25rem; }
     background: #FFF1F2;
 }
 
-/* Progress fill variants */
+/* Additional gradient/tag variants */
+.preview-card-img.gradient-teal {
+    background: linear-gradient(135deg, #F0FDFA, rgba(13, 148, 136, 0.18));
+}
+
+.preview-card-img.gradient-violet {
+    background: linear-gradient(135deg, #F5F3FF, rgba(99, 102, 241, 0.18));
+}
+
+.preview-card-tag.tag-teal {
+    color: #0D9488;
+    background: #F0FDFA;
+}
+
+.preview-card-tag.tag-violet {
+    color: #6366F1;
+    background: #F5F3FF;
+}
+
+/* Card stats row (students + rating) */
+.preview-card-stats {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.72rem;
+    color: var(--color-text-subtle);
+}
+
+.preview-card-stats i {
+    font-size: 0.7rem;
+}
+
+.preview-stat-rating {
+    color: #F59E0B;
+    font-weight: 600;
+}
+
+/* Progress fill variants (kept for course-card component) */
 .preview-progress-fill.fill-green {
     background: var(--color-success);
 }

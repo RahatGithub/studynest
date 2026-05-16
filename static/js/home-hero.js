@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
        =========================================== */
     if (visual) {
         const cards = gsap.utils.toArray(visual.querySelectorAll('.preview-card'));
-        if (cards.length >= 3) {
+        if (cards.length >= 2) {
             initMessyDeck(cards, visual);
         }
     }
@@ -63,12 +63,14 @@ function initMessyDeck(cards, container) {
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const flipDuration = prefersReduced ? 0.01 : 0.6;
 
-    // Messy deck positions (tilted same direction, offset to peek)
-    const deckPositions = [
-        { rotation: 4,  x: 0,  y: 0,  zIndex: 3 }, // top
-        { rotation: 7,  x: 35, y: 20, zIndex: 2 }, // middle (peeks right/bottom)
-        { rotation: 10, x: 65, y: 40, zIndex: 1 }, // bottom (peeks more)
-    ];
+    // Generate deck positions dynamically for N cards
+    const n = cards.length;
+    const deckPositions = cards.map((_, i) => ({
+        rotation: 3 + i * 2,
+        x: i * 8,
+        y: i * 5,
+        zIndex: n - i,
+    }));
 
     // Set initial deck positions
     cards.forEach((card, i) => {

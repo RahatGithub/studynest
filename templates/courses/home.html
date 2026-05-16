@@ -52,72 +52,64 @@
             <!-- Right column: Messy deck card stack -->
             <div class="col-lg-5 d-none d-lg-block">
                 <div class="home-hero-visual" id="hero-visual">
-                    <div class="preview-card" data-card-index="0">
+                    {% for c in hero_courses %}
+                    <div class="preview-card" data-card-index="{{ forloop.counter0 }}">
                         <button class="preview-card-close" aria-label="Close"><i class="bi bi-x-lg"></i></button>
-                        <div class="preview-card-img"></div>
+
+                        {% if use_real_courses %}
+                        {# --- Real course data --- #}
+                        <div class="preview-card-img">
+                            {% if c.thumbnail %}<img src="{{ c.thumbnail.url }}" alt="{{ c.title }}" style="width:100%;height:100%;object-fit:cover;">{% endif %}
+                        </div>
                         <div class="preview-card-body">
-                            <span class="preview-card-tag">Web Development</span>
-                            <h4 class="preview-card-title">Modern JavaScript</h4>
-                            <div class="preview-card-tutor">
-                                <span class="preview-card-avatar">J</span>
-                                <span>Jane Smith</span>
+                            {% if c.category %}<span class="preview-card-tag">{{ c.category.name }}</span>{% endif %}
+                            <h4 class="preview-card-title">{{ c.title }}</h4>
+                            <div class="preview-card-stats">
+                                <span><i class="bi bi-people-fill"></i> {{ c.student_count|default:"0" }} student{{ c.student_count|pluralize }}</span>
+                                <span class="preview-stat-rating">
+                                    {% if c.avg_rating %}<i class="bi bi-star-fill"></i> {{ c.avg_rating|floatformat:1 }}{% else %}New{% endif %}
+                                </span>
                             </div>
-                            <div class="preview-card-progress">
-                                <div class="preview-progress-bar"><div class="preview-progress-fill" style="width:64%"></div></div>
-                                <span class="preview-progress-text">64% complete</span>
+                            <div class="preview-card-tutor">
+                                {% if c.tutor.profile_picture %}
+                                    <img src="{{ c.tutor.profile_picture.url }}" alt="{{ c.tutor.username }}" class="preview-card-avatar" style="object-fit:cover;">
+                                {% else %}
+                                    <span class="preview-card-avatar">{{ c.tutor.username|first|upper }}</span>
+                                {% endif %}
+                                <span>{% if c.tutor.first_name %}{{ c.tutor.first_name }} {{ c.tutor.last_name }}{% else %}{{ c.tutor.username }}{% endif %}</span>
                             </div>
                         </div>
                         <div class="card-expanded-content">
-                            <p class="expanded-bio">Senior frontend engineer specializing in modern JavaScript ecosystems.</p>
-                            <p class="expanded-desc">Master ES6+, async patterns, closures, and the module system. Build real-world projects using modern tooling and best practices that top companies expect.</p>
-                            <span class="expanded-meta">12 lessons &middot; 4h 20m</span>
-                            <a href="#" class="btn-primary-app expanded-cta">View Course</a>
+                            {% if c.tutor.bio %}<p class="expanded-bio">{{ c.tutor.bio|truncatewords:20 }}</p>{% endif %}
+                            <p class="expanded-desc">{{ c.description|truncatewords:40 }}</p>
+                            {% if c.lesson_count %}<span class="expanded-meta">{{ c.lesson_count }} lesson{{ c.lesson_count|pluralize }}</span>{% endif %}
+                            <a href="{% url 'courses:course_detail' c.slug %}" class="btn-primary-app expanded-cta">View Course</a>
                         </div>
-                    </div>
-                    <div class="preview-card" data-card-index="1">
-                        <button class="preview-card-close" aria-label="Close"><i class="bi bi-x-lg"></i></button>
-                        <div class="preview-card-img gradient-green"></div>
+
+                        {% else %}
+                        {# --- Dummy fallback data --- #}
+                        <div class="preview-card-img {{ c.img_class }}"></div>
                         <div class="preview-card-body">
-                            <span class="preview-card-tag tag-green">Data Science</span>
-                            <h4 class="preview-card-title">Python for Analytics</h4>
-                            <div class="preview-card-tutor">
-                                <span class="preview-card-avatar" style="background:var(--color-warning);">K</span>
-                                <span>K. Rahman</span>
+                            <span class="preview-card-tag {{ c.tag_class }}">{{ c.category_name }}</span>
+                            <h4 class="preview-card-title">{{ c.title }}</h4>
+                            <div class="preview-card-stats">
+                                <span><i class="bi bi-people-fill"></i> {{ c.student_count|stringformat:"," }} students</span>
+                                <span class="preview-stat-rating"><i class="bi bi-star-fill"></i> {{ c.avg_rating }}</span>
                             </div>
-                            <div class="preview-card-progress">
-                                <div class="preview-progress-bar"><div class="preview-progress-fill fill-green" style="width:42%"></div></div>
-                                <span class="preview-progress-text">42% complete</span>
+                            <div class="preview-card-tutor">
+                                <span class="preview-card-avatar" style="background:{{ c.avatar_bg }};">{{ c.tutor_initial }}</span>
+                                <span>{{ c.tutor_name }}</span>
                             </div>
                         </div>
                         <div class="card-expanded-content">
-                            <p class="expanded-bio">Data scientist and educator with 8 years of industry experience.</p>
-                            <p class="expanded-desc">Learn pandas, NumPy, and matplotlib from scratch. Explore real datasets, build visualizations, and gain the analytical skills employers are hiring for right now.</p>
-                            <span class="expanded-meta">18 lessons &middot; 6h 10m</span>
+                            <p class="expanded-bio">{{ c.tutor_bio }}</p>
+                            <p class="expanded-desc">{{ c.description }}</p>
+                            <span class="expanded-meta">{{ c.lesson_count }} lessons</span>
                             <a href="#" class="btn-primary-app expanded-cta">View Course</a>
                         </div>
+                        {% endif %}
                     </div>
-                    <div class="preview-card" data-card-index="2">
-                        <button class="preview-card-close" aria-label="Close"><i class="bi bi-x-lg"></i></button>
-                        <div class="preview-card-img gradient-pink"></div>
-                        <div class="preview-card-body">
-                            <span class="preview-card-tag tag-pink">UI/UX Design</span>
-                            <h4 class="preview-card-title">Design Systems</h4>
-                            <div class="preview-card-tutor">
-                                <span class="preview-card-avatar" style="background:var(--color-accent);">S</span>
-                                <span>Sarah Chen</span>
-                            </div>
-                            <div class="preview-card-progress">
-                                <div class="preview-progress-bar"><div class="preview-progress-fill fill-pink" style="width:85%"></div></div>
-                                <span class="preview-progress-text">85% complete</span>
-                            </div>
-                        </div>
-                        <div class="card-expanded-content">
-                            <p class="expanded-bio">Lead product designer at a top SaaS company, design systems advocate.</p>
-                            <p class="expanded-desc">Build scalable, consistent UI with tokens, components, and documentation. Learn the workflow used by teams at Figma, Stripe, and Linear to ship polished products faster.</p>
-                            <span class="expanded-meta">15 lessons &middot; 5h 45m</span>
-                            <a href="#" class="btn-primary-app expanded-cta">View Course</a>
-                        </div>
-                    </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>
