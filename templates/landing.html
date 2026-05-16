@@ -14,7 +14,7 @@
 </head>
 <body>
 
-    <!-- ============ NAVBAR ============ -->
+    <!-- ============ NAVBAR (outside ScrollSmoother for position:fixed) ============ -->
     <nav class="landing-nav" id="landing-nav">
         <div class="nav-container">
             <a href="#hero" class="nav-logo">
@@ -34,25 +34,81 @@
         </div>
     </nav>
 
+<!-- ScrollSmoother Wrapper -->
+<div id="smooth-wrapper">
+<div id="smooth-content">
+
     <!-- ============ HERO ============ -->
     <section class="hero" id="hero">
+        <!-- Animated background orbs -->
         <div class="hero-orb hero-orb-1"></div>
         <div class="hero-orb hero-orb-2"></div>
         <div class="hero-orb hero-orb-3"></div>
+        <div class="hero-orb hero-orb-4"></div>
 
-        <div class="hero-content">
-            <p class="hero-overline">Welcome to StudyNest</p>
-            <h1 class="hero-title" id="hero-title">Master New Skills with Interactive Learning</h1>
-            <p class="hero-subtitle">A modern e-learning platform where students discover courses, track progress, and instructors build engaging content — all in one place.</p>
-            <div class="hero-ctas">
-                <a href="#demo" class="btn-gradient">Try Demo <i class="bi bi-play-circle"></i></a>
-                <a href="{% url 'courses:home' %}" class="btn-outline-glass">Explore Platform <i class="bi bi-arrow-right"></i></a>
+        <div class="hero-grid">
+            <!-- Left column: Text content -->
+            <div class="hero-text">
+                <p class="hero-eyebrow">The smarter way to learn</p>
+                <div class="hero-headline-wrapper" style="perspective: 1000px;">
+                    <h1 class="hero-title" id="hero-title">Master Anything. From Anywhere.</h1>
+                </div>
+                <p class="hero-subtitle" id="hero-subtitle">StudyNest is the modern learning platform built for ambitious learners and educators.</p>
+                <div class="hero-ctas">
+                    <a href="#demo" class="btn-hero-primary" id="hero-cta-primary">Start Learning Free</a>
+                    <a href="{% url 'courses:home' %}" class="btn-hero-secondary"><i class="bi bi-play-circle-fill"></i> Watch Demo</a>
+                </div>
+                <div class="hero-stats">
+                    <div class="hero-stat">
+                        <span class="hero-stat-number" data-target="10000">0</span><span class="hero-stat-suffix">+</span>
+                        <span class="hero-stat-label">Students</span>
+                    </div>
+                    <div class="hero-stat">
+                        <span class="hero-stat-number" data-target="500">0</span><span class="hero-stat-suffix">+</span>
+                        <span class="hero-stat-label">Courses</span>
+                    </div>
+                    <div class="hero-stat">
+                        <span class="hero-stat-number" data-target="4.9" data-decimal="true">0</span><span class="hero-stat-suffix">★</span>
+                        <span class="hero-stat-label">Rating</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right column: Floating UI cards -->
+            <div class="hero-cards" id="hero-cards">
+                <div class="hero-card hero-card-1">
+                    <div class="hero-card-icon"><i class="bi bi-graph-up-arrow"></i></div>
+                    <div class="hero-card-body">
+                        <span class="hero-card-label">Course Progress</span>
+                        <div class="hero-card-progress">
+                            <div class="hero-card-progress-bar"></div>
+                        </div>
+                        <span class="hero-card-meta">78% Complete</span>
+                    </div>
+                </div>
+                <div class="hero-card hero-card-2">
+                    <div class="hero-card-icon icon-live"><i class="bi bi-broadcast"></i></div>
+                    <div class="hero-card-body">
+                        <span class="hero-card-label">Live Class</span>
+                        <span class="hero-card-title">Advanced Python — Session 12</span>
+                        <span class="hero-card-meta live-badge">● Live Now</span>
+                    </div>
+                </div>
+                <div class="hero-card hero-card-3">
+                    <div class="hero-card-icon icon-badge"><i class="bi bi-trophy-fill"></i></div>
+                    <div class="hero-card-body">
+                        <span class="hero-card-label">Achievement</span>
+                        <span class="hero-card-title">Fast Learner 🏆</span>
+                        <span class="hero-card-meta">Completed 5 courses this month</span>
+                    </div>
+                </div>
             </div>
         </div>
 
+        <!-- Scroll indicator -->
         <div class="scroll-indicator" id="scroll-indicator">
             <span class="scroll-text">Scroll</span>
-            <div class="scroll-line"></div>
+            <div class="scroll-arrow"><i class="bi bi-chevron-down"></i></div>
         </div>
     </section>
 
@@ -285,9 +341,17 @@
         </div>
     </footer>
 
-    <!-- Scripts -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+</div><!-- /#smooth-content -->
+</div><!-- /#smooth-wrapper -->
+
+    <!-- GSAP Core + Plugins -->
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/Flip.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/Observer.min.js"></script>
+    <!-- Premium plugins via gsap-trial -->
+    <script src="https://cdn.jsdelivr.net/npm/gsap-trial@3.12.7/dist/ScrollSmoother.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap-trial@3.12.7/dist/SplitText.min.js"></script>
     <script src="{% static 'js/landing.js' %}"></script>
 </body>
 </html>
