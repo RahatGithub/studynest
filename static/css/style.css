@@ -1318,69 +1318,22 @@ h4 { font-size: 1.25rem; }
     transform: translateX(4px);
 }
 
-/* Carousel wrapper */
-.cat-carousel-wrapper {
-    position: relative;
-}
-
-.cat-carousel {
-    display: flex;
+/* Bento grid */
+.cat-bento {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: auto auto;
     gap: 16px;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scroll-behavior: smooth;
-    padding: 4px 0;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
 }
 
-.cat-carousel::-webkit-scrollbar {
-    display: none;
-}
-
-/* Navigation arrows */
-.cat-carousel-btn {
-    display: none;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 10;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    border: none;
-    background: #ffffff;
-    color: #111827;
-    font-size: 1rem;
-    cursor: pointer;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    transition: box-shadow 0.2s ease;
-}
-
-.cat-carousel-btn:hover {
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
-}
-
-.cat-carousel-btn-left {
-    left: -20px;
-}
-
-.cat-carousel-btn-right {
-    right: -20px;
-}
-
-.cat-carousel-btn.visible {
-    display: flex;
+/* First two cards span 2 columns (large) */
+.cat-bento .cat-card:nth-child(1),
+.cat-bento .cat-card:nth-child(2) {
+    grid-column: span 2;
 }
 
 /* Category card */
 .cat-card {
-    flex: 0 0 auto;
-    width: 240px;
-    height: 200px;
     border-radius: 16px;
     padding: 28px;
     text-decoration: none;
@@ -1391,8 +1344,8 @@ h4 { font-size: 1.25rem; }
     gap: 12px;
     background: #ffffff;
     border: 1px solid #e5e7eb;
-    scroll-snap-align: start;
     transition: all 0.3s ease;
+    min-height: 180px;
 }
 
 .cat-card:hover {
@@ -1453,14 +1406,11 @@ h4 { font-size: 1.25rem; }
     margin-top: auto;
 }
 
-/* Hidden — not used in this design */
-.cat-card-explore {
-    display: none;
-}
-
 .cat-empty {
+    grid-column: 1 / -1;
     padding: 2rem;
     color: #6b7280;
+    text-align: center;
 }
 
 /* ============================================
@@ -1695,19 +1645,18 @@ input:focus-visible {
         gap: 1rem;
     }
 
+    .cat-bento {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .cat-bento .cat-card:nth-child(1),
+    .cat-bento .cat-card:nth-child(2) {
+        grid-column: span 1;
+    }
+
     .cat-card {
-        width: 70vw;
-        max-width: 260px;
-        height: 200px;
-    }
-
-    .cat-carousel {
-        padding-left: 20px;
-        padding-right: 20px;
-    }
-
-    .cat-carousel-btn {
-        display: none !important;
+        min-height: 160px;
+        padding: 20px;
     }
 
     /* Featured courses mobile */
@@ -1740,8 +1689,3 @@ input:focus-visible {
     }
 }
 
-@media (min-width: 769px) {
-    .cat-carousel-btn.visible {
-        display: flex;
-    }
-}
