@@ -31,7 +31,11 @@
                 <div class="home-hero-proof" id="hero-proof">
                     <div class="avatar-stack">
                         {% for av in hero_avatars %}
+                        {% if av.type == 'image' %}
+                        <span class="avatar-circle" style="background:{{ av.color }};z-index:{{ forloop.revcounter }};">{{ av.letter }}<img src="{{ av.src }}" alt="" class="avatar-circle-img" onerror="this.remove();"></span>
+                        {% else %}
                         <span class="avatar-circle" style="background:{{ av.color }};z-index:{{ forloop.revcounter }};">{{ av.letter }}</span>
+                        {% endif %}
                         {% endfor %}
                     </div>
                     <span class="proof-text">Join <strong>10,000+</strong> learners advancing their skills</span>
