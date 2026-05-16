@@ -805,37 +805,8 @@ h4 { font-size: 1.25rem; }
     border: 1px solid var(--color-border);
     overflow: hidden;
     opacity: 0;
-    transform: translateY(20px) scale(0.95);
-}
-
-.preview-card-back-2 {
-    top: 15%;
-    right: 5%;
-    width: 260px;
-    height: 200px;
-    background: var(--color-bg-subtle);
-    border: 1px dashed var(--color-border-strong);
-    box-shadow: var(--shadow-sm);
-}
-
-.preview-card-back-1 {
-    top: 10%;
-    right: 10%;
-    width: 280px;
-    height: 260px;
-    box-shadow: var(--shadow-sm);
-}
-
-.preview-card-front {
-    top: 5%;
-    right: 15%;
-    width: 300px;
-    z-index: 3;
-    transition: transform var(--transition-base);
-}
-
-.home-hero-visual:hover .preview-card-front {
-    transform: translateY(-4px) scale(1);
+    transform: scale(0.85);
+    will-change: transform, opacity;
 }
 
 .preview-card-img {
@@ -917,6 +888,35 @@ h4 { font-size: 1.25rem; }
     font-size: 0.7rem;
     color: var(--color-text-subtle);
     white-space: nowrap;
+}
+
+/* Card image gradient variants */
+.preview-card-img.gradient-green {
+    background: linear-gradient(135deg, #ECFDF5, rgba(16, 185, 129, 0.18));
+}
+
+.preview-card-img.gradient-pink {
+    background: linear-gradient(135deg, #FFF1F2, rgba(236, 72, 153, 0.15));
+}
+
+/* Tag color variants */
+.preview-card-tag.tag-green {
+    color: var(--color-success);
+    background: #ECFDF5;
+}
+
+.preview-card-tag.tag-pink {
+    color: var(--color-accent);
+    background: #FFF1F2;
+}
+
+/* Progress fill variants */
+.preview-progress-fill.fill-green {
+    background: var(--color-success);
+}
+
+.preview-progress-fill.fill-pink {
+    background: var(--color-accent);
 }
 
 /* ============================================

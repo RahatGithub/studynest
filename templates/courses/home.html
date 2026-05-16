@@ -48,12 +48,10 @@
                 </div>
             </div>
 
-            <!-- Right column: Preview card stack -->
+            <!-- Right column: Rotating card stack -->
             <div class="col-lg-5 d-none d-lg-block">
                 <div class="home-hero-visual" id="hero-visual">
-                    <div class="preview-card preview-card-back-2"></div>
-                    <div class="preview-card preview-card-back-1"></div>
-                    <div class="preview-card preview-card-front">
+                    <div class="preview-card" data-card-index="0">
                         <div class="preview-card-img"></div>
                         <div class="preview-card-body">
                             <span class="preview-card-tag">Web Development</span>
@@ -63,10 +61,38 @@
                                 <span>Jane Smith</span>
                             </div>
                             <div class="preview-card-progress">
-                                <div class="preview-progress-bar">
-                                    <div class="preview-progress-fill"></div>
-                                </div>
+                                <div class="preview-progress-bar"><div class="preview-progress-fill" style="width:64%"></div></div>
                                 <span class="preview-progress-text">64% complete</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="preview-card" data-card-index="1">
+                        <div class="preview-card-img gradient-green"></div>
+                        <div class="preview-card-body">
+                            <span class="preview-card-tag tag-green">Data Science</span>
+                            <h4 class="preview-card-title">Python for Analytics</h4>
+                            <div class="preview-card-tutor">
+                                <span class="preview-card-avatar" style="background:var(--color-warning);">K</span>
+                                <span>K. Rahman</span>
+                            </div>
+                            <div class="preview-card-progress">
+                                <div class="preview-progress-bar"><div class="preview-progress-fill fill-green" style="width:42%"></div></div>
+                                <span class="preview-progress-text">42% complete</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="preview-card" data-card-index="2">
+                        <div class="preview-card-img gradient-pink"></div>
+                        <div class="preview-card-body">
+                            <span class="preview-card-tag tag-pink">UI/UX Design</span>
+                            <h4 class="preview-card-title">Design Systems</h4>
+                            <div class="preview-card-tutor">
+                                <span class="preview-card-avatar" style="background:var(--color-accent);">S</span>
+                                <span>Sarah Chen</span>
+                            </div>
+                            <div class="preview-card-progress">
+                                <div class="preview-progress-bar"><div class="preview-progress-fill fill-pink" style="width:85%"></div></div>
+                                <span class="preview-progress-text">85% complete</span>
                             </div>
                         </div>
                     </div>
