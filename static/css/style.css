@@ -609,6 +609,23 @@ h4 { font-size: 1.25rem; }
 .home-hero {
     padding: 5rem 0 4rem;
     background: var(--color-bg);
+    position: relative;
+}
+
+/* Modal backdrop */
+.card-modal-backdrop {
+    display: none;
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 999;
+    opacity: 0;
+}
+
+.card-modal-backdrop.active {
+    display: block;
 }
 
 .home-hero-content {
@@ -838,16 +855,16 @@ h4 { font-size: 1.25rem; }
     color: var(--color-text);
 }
 
-/* Expanded state */
+/* Expanded state — centered modal over hero */
 .preview-card.expanded {
     position: absolute;
-    inset: 0;
-    width: auto;
-    height: auto;
-    transform: rotate(0deg) !important;
-    z-index: 10 !important;
+    width: min(680px, 90%);
+    max-height: 85vh;
+    top: 50%;
+    left: 50%;
+    z-index: 1000 !important;
     cursor: default;
-    box-shadow: var(--shadow-lg);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.25);
     border-color: var(--color-border);
     overflow-y: auto;
 }

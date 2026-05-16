@@ -117,14 +117,15 @@ function initMessyDeck(cards, container) {
         });
     }
 
-    // --- Click to expand (GSAP Flip) ---
+    // Elements
+    const heroSection = document.getElementById('home-hero');
+    const backdrop = document.getElementById('card-modal-backdrop');
+
+    // --- Click to expand ---
     cards.forEach(card => {
         card.addEventListener('click', (e) => {
-            // If already expanded, do nothing (only close button collapses)
             if (expandedCard) return;
-            // Don't expand if clicking the close button
             if (e.target.closest('.preview-card-close')) return;
-
             expandCard(card);
         });
     });
@@ -135,49 +136,66 @@ function initMessyDeck(cards, container) {
         if (closeBtn) {
             closeBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                if (expandedCard === card) {
-                    collapseCard(card);
-                }
+                if (expandedCard === card) collapseCard(card);
             });
         }
     });
+
+    // Backdrop click closes
+    if (backdrop) {
+        backdrop.addEventListener('click', () => {
+            if (expandedCard) collapseCard(expandedCard);
+        });
+    }
+
+    // Escape key closes
+    function onEscape(e) {
+        if (e.key === 'Escape' && expandedCard) {
+            collapseCard(expandedCard);
+        }
+    }
 
     function expandCard(card) {
         expandedCard = card;
         const otherCards = cards.filter(c => c !== card);
 
-        // Capture state before changes
+        // Capture state before DOM changes
         const state = Flip.getState(card);
 
-        // Add expanded class
+        // Move card to hero section root so it can center over everything
+        heroSection.appendChild(card);
+
+        // Add expanded class (CSS positions it at top:50% left:50%)
         card.classList.add('expanded');
 
+        // GSAP centers it (avoids CSS transform conflict with Flip)
+        gsap.set(card, { xPercent: -50, yPercent: -50, rotation: 0 });
+
         // Animate with Flip
-        const flipTl = Flip.from(state, {
+        Flip.from(state, {
             duration: flipDuration,
             ease: 'power2.inOut',
             absolute: true,
         });
 
-        // Fade out other cards simultaneously
-        gsap.to(otherCards, {
-            opacity: 0,
-            scale: 0.9,
-            duration: flipDuration,
-            ease: 'power2.inOut',
-        });
+        // Show backdrop
+        if (backdrop) {
+            backdrop.classList.add('active');
+            gsap.to(backdrop, { opacity: 1, duration: flipDuration, ease: 'power2.inOut' });
+        }
 
-        // Fade in expanded content after Flip lands
+        // Fade out other cards
+        gsap.to(otherCards, { opacity: 0, scale: 0.9, duration: flipDuration, ease: 'power2.inOut' });
+
+        // Fade in expanded content
         const expandedContent = card.querySelector('.card-expanded-content');
         if (expandedContent && !prefersReduced) {
-            gsap.from(expandedContent, {
-                opacity: 0,
-                y: 15,
-                duration: 0.4,
-                ease: 'power2.out',
-                delay: flipDuration * 0.5,
-            });
+            gsap.from(expandedContent, { opacity: 0, y: 15, duration: 0.4, ease: 'power2.out', delay: flipDuration * 0.5 });
         }
+
+        // Lock body scroll + listen for Escape
+        document.body.style.overflow = 'hidden';
+        document.addEventListener('keydown', onEscape);
     }
 
     function collapseCard(card) {
@@ -186,41 +204,43 @@ function initMessyDeck(cards, container) {
         // Capture expanded state
         const state = Flip.getState(card);
 
-        // Remove expanded class
+        // Remove expanded class and centering
         card.classList.remove('expanded');
+        gsap.set(card, { clearProps: 'xPercent,yPercent' });
+
+        // Move card back into the visual container
+        container.appendChild(card);
 
         // Restore deck position
         const i = cards.indexOf(card);
         const pos = deckPositions[i];
-        gsap.set(card, {
-            rotation: pos.rotation,
-            x: pos.x,
-            y: pos.y,
-            zIndex: pos.zIndex,
-        });
+        gsap.set(card, { rotation: pos.rotation, x: pos.x, y: pos.y, zIndex: pos.zIndex });
 
         // Animate back with Flip
-        Flip.from(state, {
-            duration: flipDuration,
-            ease: 'power2.inOut',
-            absolute: true,
-        });
+        Flip.from(state, { duration: flipDuration, ease: 'power2.inOut', absolute: true });
+
+        // Hide backdrop
+        if (backdrop) {
+            gsap.to(backdrop, {
+                opacity: 0, duration: flipDuration, ease: 'power2.inOut',
+                onComplete: () => backdrop.classList.remove('active'),
+            });
+        }
 
         // Fade other cards back in
-        otherCards.forEach((c, idx) => {
+        otherCards.forEach(c => {
             const otherIdx = cards.indexOf(c);
             const otherPos = deckPositions[otherIdx];
             gsap.to(c, {
-                opacity: 1,
-                scale: 1,
-                rotation: otherPos.rotation,
-                x: otherPos.x,
-                y: otherPos.y,
-                zIndex: otherPos.zIndex,
-                duration: flipDuration,
-                ease: 'power2.inOut',
+                opacity: 1, scale: 1,
+                rotation: otherPos.rotation, x: otherPos.x, y: otherPos.y, zIndex: otherPos.zIndex,
+                duration: flipDuration, ease: 'power2.inOut',
             });
         });
+
+        // Unlock body scroll + remove Escape listener
+        document.body.style.overflow = '';
+        document.removeEventListener('keydown', onEscape);
 
         expandedCard = null;
     }
