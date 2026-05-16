@@ -66,9 +66,10 @@ function initFanDeck(cards) {
     // Left-to-right fan: card 0 is front/left, card n-1 is back/right
     const baseRotation = -10;
     const rotationStep = 10;
+    const xStep = 45; // horizontal spread between cards
     const deckPositions = cards.map((_, i) => ({
         rotation: baseRotation + i * rotationStep,
-        x: 0,
+        x: i * xStep,
         y: 0,
         zIndex: n - i, // card 0 highest
     }));
