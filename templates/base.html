@@ -6,73 +6,70 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}StudyNest - E-Learning Platform{% endblock %}</title>
-    
+
+    <!-- Font preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Bootstrap Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"> 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
-    <!-- Custom External CSS -->
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{% static 'images/icon.png' %}">
 
     {% block extra_css %}{% endblock %}
-
 </head>
-<body class="d-flex flex-column min-vh-100">
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container">
-            <a class="navbar-brand" href="{% url 'courses:home' %}">
-                <img src="{% static 'images/logo.png' %}" alt="StudyNest Logo" height="60">
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="{% url 'courses:home' %}">Home</a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="{% url 'courses:course_list' %}">Browse Courses</a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav">
-                    {% if user.is_authenticated %}
-                        <li class="nav-item">
-                            <a class="nav-link text-white" href="{% url 'courses:dashboard' %}">Dashboard</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white" href="{% url 'accounts:logout' %}">Logout</a>
-                        </li>
-                    {% else %}
-                        <li class="nav-item">
-                            <a class="nav-link text-white" href="{% url 'accounts:login' %}">Login</a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle text-white" href="#" id="signupDropdown" role="button" data-bs-toggle="dropdown">
-                                Sign Up
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="{% url 'accounts:signup_student' %}">Sign up as Student</a></li>
-                                <li><a class="dropdown-item" href="{% url 'accounts:signup_tutor' %}">Sign up as Tutor</a></li>
-                            </ul>
-                        </li>
-                    {% endif %}
-                </ul>
+<body>
+    <!-- App Navbar -->
+    <nav class="app-navbar" id="app-navbar">
+        <div class="app-navbar-inner">
+            <a href="{% url 'courses:home' %}" class="app-nav-brand">StudyNest</a>
+
+            <ul class="app-nav-links">
+                <li><a href="{% url 'courses:home' %}" class="app-nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}">Home</a></li>
+                <li><a href="{% url 'courses:course_list' %}" class="app-nav-link {% if request.resolver_match.url_name == 'course_list' %}active{% endif %}">Browse Courses</a></li>
+            </ul>
+
+            <div class="app-nav-auth">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'courses:dashboard' %}" class="app-nav-auth-link">Dashboard</a>
+                    <a href="{% url 'accounts:logout' %}" class="app-nav-auth-link">Logout</a>
+                {% else %}
+                    <a href="{% url 'accounts:login' %}" class="app-nav-auth-link">Log In</a>
+                    <a href="{% url 'accounts:signup_student' %}" class="btn-primary-app">Sign Up</a>
+                {% endif %}
             </div>
+
+            <button class="app-nav-toggle" id="app-nav-toggle" aria-label="Toggle menu">
+                <i class="bi bi-list"></i>
+            </button>
         </div>
     </nav>
 
+    <!-- Mobile nav panel -->
+    <div class="app-nav-mobile" id="app-nav-mobile">
+        <a href="{% url 'courses:home' %}">Home</a>
+        <a href="{% url 'courses:course_list' %}">Browse Courses</a>
+        {% if user.is_authenticated %}
+            <a href="{% url 'courses:dashboard' %}">Dashboard</a>
+            <a href="{% url 'accounts:logout' %}">Logout</a>
+        {% else %}
+            <a href="{% url 'accounts:login' %}">Log In</a>
+            <a href="{% url 'accounts:signup_student' %}">Sign Up as Student</a>
+            <a href="{% url 'accounts:signup_tutor' %}">Sign Up as Tutor</a>
+        {% endif %}
+    </div>
+
     <!-- Messages -->
     {% if messages %}
-        <div class="container mt-3">
+        <div class="container-app" style="padding-top: 1rem;">
             {% for message in messages %}
                 <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
                     {{ message }}
@@ -83,44 +80,36 @@
     {% endif %}
 
     <!-- Main Content -->
-     <main class="py-4 flex-grow-1">
+    <main class="app-main">
         {% block content %}{% endblock %}
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-dark text-white py-4 mt-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-                    <h5>StudyNest</h5>
-                    <p class="mb-0">E-Learning Platform Portfolio Project</p>
-                    <small class="text-light">Built with Django, Bootstrap, and Stripe</small>
-                </div>
-                <div class="col-md-6 text-md-end">
-                    <p class="mb-1">
-                        <small class="text-light">
-                            Uses Stripe sandbox for payment demonstration<br>
-                            Designed for easy migration to AWS S3 for video hosting
-                        </small>
-                    </p>
-                    <p class="mb-0">
-                        <a href="{% url 'courses:course_list' %}" class="text-decoration-none me-3">Browse Courses</a>
-                        {% if not user.is_authenticated %}
-                            <a href="{% url 'accounts:signup_student' %}" class="text-decoration-none">Get Started</a>
-                        {% endif %}
-                    </p>
-                </div>
+    <!-- App Footer -->
+    <footer class="app-footer">
+        <div class="app-footer-inner">
+            <div class="app-footer-brand">StudyNest</div>
+            <p class="app-footer-tagline">Built for focused learners.</p>
+            <div class="app-footer-links">
+                <a href="{% url 'courses:home' %}">Home</a>
+                <a href="{% url 'courses:course_list' %}">Courses</a>
+                <a href="#" >About</a>
+                <a href="#">Privacy</a>
+                <a href="#">Terms</a>
             </div>
-            <hr class="my-3">
-            <div class="text-center">
-                <small class="text-light">&copy; 2025 StudyNest. All rights reserved.</small>
-            </div>
+            <p class="app-footer-copy">&copy; 2026 StudyNest. All rights reserved.</p>
         </div>
     </footer>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
+
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+    <!-- App Animations -->
+    <script src="{% static 'js/app-animations.js' %}"></script>
+
     {% block extra_js %}{% endblock %}
 </body>
 </html>
