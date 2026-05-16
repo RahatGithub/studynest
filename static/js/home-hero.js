@@ -24,12 +24,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (ctas) tl.to(ctas, { opacity: 1, y: 0, duration: 0.5 }, '-=0.15');
 
     /* ===========================================
-       Right column: Messy Deck with Flip Expand
+       Right column: Fan deck (left-to-right cascade)
        =========================================== */
     if (visual) {
         const cards = gsap.utils.toArray(visual.querySelectorAll('.preview-card'));
         if (cards.length >= 2) {
-            initMessyDeck(cards, visual);
+            initFanDeck(cards);
         }
     }
 
@@ -57,25 +57,21 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* ===========================================
-   Messy Deck — static tilted stack + Flip expand
+   Fan Deck — left-to-right cascade, hover only
    =========================================== */
-function initMessyDeck(cards, container) {
+function initFanDeck(cards) {
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const flipDuration = prefersReduced ? 0.01 : 0.6;
-
-    // Fan positions: rotation around bottom-center pivot (transform-origin: 50% 180% in CSS)
     const n = cards.length;
-    const mid = (n - 1) / 2;
-    const spread = 16; // degrees between cards → -32, -16, 0, 16, 32
-    const deckPositions = cards.map((_, i) => {
-        const offset = i - mid; // -2, -1, 0, 1, 2 for 5 cards
-        return {
-            rotation: offset * spread,
-            x: 0,
-            y: 0,
-            zIndex: n - Math.abs(Math.round(offset)), // center highest
-        };
-    });
+
+    // Left-to-right fan: card 0 is front/left, card n-1 is back/right
+    const baseRotation = -10;
+    const rotationStep = 10;
+    const deckPositions = cards.map((_, i) => ({
+        rotation: baseRotation + i * rotationStep,
+        x: 0,
+        y: 0,
+        zIndex: n - i, // card 0 highest
+    }));
 
     // Set initial fan positions
     cards.forEach((card, i) => {
@@ -100,20 +96,15 @@ function initMessyDeck(cards, container) {
         delay: 0.3,
     });
 
-    // Track expanded state
-    let expandedCard = null;
-
     // --- Hover: lift + glow + z-index raise ---
     cards.forEach(card => {
         card.addEventListener('mouseenter', () => {
-            if (expandedCard) return;
             card.classList.add('hovered');
             if (!prefersReduced) {
                 gsap.to(card, { y: -20, scale: 1.05, zIndex: n + 1, duration: 0.25, ease: 'power2.out', overwrite: 'auto' });
             }
         });
         card.addEventListener('mouseleave', () => {
-            if (expandedCard) return;
             card.classList.remove('hovered');
             const i = cards.indexOf(card);
             const pos = deckPositions[i];
@@ -122,120 +113,4 @@ function initMessyDeck(cards, container) {
             }
         });
     });
-
-    // Elements
-    const backdrop = document.getElementById('card-modal-backdrop');
-
-    // --- Click to expand ---
-    cards.forEach(card => {
-        card.addEventListener('click', (e) => {
-            if (expandedCard) return;
-            if (e.target.closest('.preview-card-close')) return;
-            expandCard(card);
-        });
-    });
-
-    // Close buttons
-    cards.forEach(card => {
-        const closeBtn = card.querySelector('.preview-card-close');
-        if (closeBtn) {
-            closeBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                if (expandedCard === card) collapseCard(card);
-            });
-        }
-    });
-
-    // Backdrop click closes
-    if (backdrop) {
-        backdrop.addEventListener('click', () => {
-            if (expandedCard) collapseCard(expandedCard);
-        });
-    }
-
-    // Escape key closes
-    function onEscape(e) {
-        if (e.key === 'Escape' && expandedCard) {
-            collapseCard(expandedCard);
-        }
-    }
-
-    function expandCard(card) {
-        expandedCard = card;
-        const otherCards = cards.filter(c => c !== card);
-
-        // Capture state before changes
-        const state = Flip.getState(card);
-
-        // Add expanded class (CSS: inset:0 fills the .home-hero-visual container)
-        card.classList.add('expanded');
-        gsap.set(card, { rotation: 0 });
-
-        // Animate with Flip
-        Flip.from(state, {
-            duration: flipDuration,
-            ease: 'power2.inOut',
-            absolute: true,
-        });
-
-        // Show backdrop
-        if (backdrop) {
-            backdrop.classList.add('active');
-            gsap.to(backdrop, { opacity: 1, duration: flipDuration, ease: 'power2.inOut' });
-        }
-
-        // Fade out other cards
-        gsap.to(otherCards, { opacity: 0, scale: 0.9, duration: flipDuration, ease: 'power2.inOut' });
-
-        // Fade in expanded content
-        const expandedContent = card.querySelector('.card-expanded-content');
-        if (expandedContent && !prefersReduced) {
-            gsap.from(expandedContent, { opacity: 0, y: 15, duration: 0.4, ease: 'power2.out', delay: flipDuration * 0.5 });
-        }
-
-        // Listen for Escape
-        document.addEventListener('keydown', onEscape);
-    }
-
-    function collapseCard(card) {
-        const otherCards = cards.filter(c => c !== card);
-
-        // Capture expanded state
-        const state = Flip.getState(card);
-
-        // Remove expanded class
-        card.classList.remove('expanded');
-
-        // Restore fan position
-        const i = cards.indexOf(card);
-        const pos = deckPositions[i];
-        gsap.set(card, { rotation: pos.rotation, x: pos.x, y: pos.y, zIndex: pos.zIndex });
-
-        // Animate back with Flip
-        Flip.from(state, { duration: flipDuration, ease: 'power2.inOut', absolute: true });
-
-        // Hide backdrop
-        if (backdrop) {
-            gsap.to(backdrop, {
-                opacity: 0, duration: flipDuration, ease: 'power2.inOut',
-                onComplete: () => backdrop.classList.remove('active'),
-            });
-        }
-
-        // Fade other cards back in
-        otherCards.forEach(c => {
-            const otherIdx = cards.indexOf(c);
-            const otherPos = deckPositions[otherIdx];
-            gsap.to(c, {
-                opacity: 1, scale: 1,
-                rotation: otherPos.rotation, x: otherPos.x, y: otherPos.y, zIndex: otherPos.zIndex,
-                duration: flipDuration, ease: 'power2.inOut',
-            });
-        });
-
-        // Remove Escape listener
-        document.removeEventListener('keydown', onEscape);
-
-        expandedCard = null;
-    }
 }

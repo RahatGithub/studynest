@@ -51,13 +51,9 @@
             <!-- Right column: Messy deck card stack -->
             <div class="col-lg-5 d-none d-lg-block">
                 <div class="home-hero-visual" id="hero-visual">
-                    <div class="card-modal-backdrop" id="card-modal-backdrop"></div>
                     {% for c in hero_courses %}
                     <div class="preview-card" data-card-index="{{ forloop.counter0 }}">
-                        <button class="preview-card-close" aria-label="Close"><i class="bi bi-x-lg"></i></button>
-
                         {% if use_real_courses %}
-                        {# --- Real course data --- #}
                         <div class="preview-card-img">
                             {% if c.thumbnail %}<img src="{{ c.thumbnail.url }}" alt="{{ c.title }}" style="width:100%;height:100%;object-fit:cover;">{% endif %}
                         </div>
@@ -79,15 +75,7 @@
                                 <span>{% if c.tutor.first_name %}{{ c.tutor.first_name }} {{ c.tutor.last_name }}{% else %}{{ c.tutor.username }}{% endif %}</span>
                             </div>
                         </div>
-                        <div class="card-expanded-content">
-                            {% if c.tutor.bio %}<p class="expanded-bio">{{ c.tutor.bio|truncatewords:20 }}</p>{% endif %}
-                            <p class="expanded-desc">{{ c.description|truncatewords:40 }}</p>
-                            {% if c.lesson_count %}<span class="expanded-meta">{{ c.lesson_count }} lesson{{ c.lesson_count|pluralize }}</span>{% endif %}
-                            <a href="{% url 'courses:course_detail' c.slug %}" class="btn-primary-app expanded-cta">View Course</a>
-                        </div>
-
                         {% else %}
-                        {# --- Dummy fallback data --- #}
                         <div class="preview-card-img {{ c.img_class }}"></div>
                         <div class="preview-card-body">
                             <span class="preview-card-tag {{ c.tag_class }}">{{ c.category_name }}</span>
@@ -100,12 +88,6 @@
                                 <span class="preview-card-avatar" style="background:{{ c.avatar_bg }};">{{ c.tutor_initial }}</span>
                                 <span>{{ c.tutor_name }}</span>
                             </div>
-                        </div>
-                        <div class="card-expanded-content">
-                            <p class="expanded-bio">{{ c.tutor_bio }}</p>
-                            <p class="expanded-desc">{{ c.description }}</p>
-                            <span class="expanded-meta">{{ c.lesson_count }} lessons</span>
-                            <a href="#" class="btn-primary-app expanded-cta">View Course</a>
                         </div>
                         {% endif %}
                     </div>
