@@ -15,27 +15,26 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!headline) return;
 
     /* --- Left column entrance timeline --- */
-    const tl = gsap.timeline({ defaults: { ease: 'power2.out' }, delay: 0.2 });
+    const tl = gsap.timeline({ defaults: { ease: 'power2.out' }, delay: 0.15 });
 
-    if (eyebrow) tl.to(eyebrow, { opacity: 1, y: 0, duration: 0.4 });
-    if (headline) tl.to(headline, { opacity: 1, y: 0, duration: 0.5 }, '-=0.2');
-    if (sub) tl.to(sub, { opacity: 1, y: 0, duration: 0.4 }, '-=0.25');
-    if (search) tl.to(search, { opacity: 1, y: 0, scale: 1, duration: 0.4 }, '-=0.25');
-    if (proof) tl.to(proof, { opacity: 1, y: 0, duration: 0.4 }, '-=0.2');
-    if (ctas) tl.to(ctas, { opacity: 1, y: 0, duration: 0.4 }, '-=0.2');
+    if (eyebrow) tl.to(eyebrow, { opacity: 1, y: 0, duration: 0.5 });
+    if (headline) tl.to(headline, { opacity: 1, y: 0, duration: 0.6 }, '-=0.2');
+    if (sub) tl.to(sub, { opacity: 1, y: 0, duration: 0.5 }, '-=0.25');
+    if (search) tl.to(search, { opacity: 1, y: 0, scale: 1, duration: 0.5 }, '-=0.2');
+    if (proof) tl.to(proof, { opacity: 1, y: 0, duration: 0.5 }, '-=0.15');
+    if (ctas) tl.to(ctas, { opacity: 1, y: 0, duration: 0.5 }, '-=0.15');
 
     /* --- Right column: preview card stack --- */
     if (visual) {
         const cards = visual.querySelectorAll('.preview-card');
-        // Cards enter: back card first, front card last (reverse order in DOM)
         gsap.to(cards, {
             opacity: 1,
             y: 0,
             scale: 1,
-            duration: 0.6,
-            stagger: 0.12,
-            ease: 'power2.out',
-            delay: 0.5,
+            duration: 0.7,
+            stagger: 0.15,
+            ease: 'power3.out',
+            delay: 0.3,
         });
     }
 
@@ -45,10 +44,10 @@ document.addEventListener('DOMContentLoaded', () => {
         gsap.from(avatars, {
             opacity: 0,
             scale: 0.5,
-            stagger: 0.05,
-            duration: 0.3,
+            stagger: 0.06,
+            duration: 0.35,
             ease: 'back.out(1.5)',
-            delay: 1.0,
+            delay: 1.2,
         });
     }
 

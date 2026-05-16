@@ -20,13 +20,20 @@ ScrollTrigger.defaults({
 document.addEventListener('DOMContentLoaded', () => {
     const main = document.querySelector('.app-main');
     if (main) {
-        gsap.to(main, {
-            opacity: 1,
-            y: 0,
-            duration: 0.5,
-            ease: 'power2.out',
-            delay: 0.05,
-        });
+        // If this page has its own hero animations (home page), make main
+        // visible immediately so hero animations aren't masked by parent opacity.
+        const hasHeroAnim = document.getElementById('hero-headline');
+        if (hasHeroAnim) {
+            gsap.set(main, { opacity: 1, y: 0 });
+        } else {
+            gsap.to(main, {
+                opacity: 1,
+                y: 0,
+                duration: 0.5,
+                ease: 'power2.out',
+                delay: 0.05,
+            });
+        }
     }
 });
 
