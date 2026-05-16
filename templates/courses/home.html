@@ -1,20 +1,75 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Home - StudyNest{% endblock %}
 
 {% block content %}
 <!-- Hero Section -->
-<section class="bg-white py-5">
+<section class="home-hero">
     <div class="container">
-        <div class="row align-items-center text-center">
-            <div class="col-lg-12">
-                <h1 class="display-3 fw-bold mb-3 text-primary">Learn Without Limits</h1>
-                <p class="lead mb-4"><strong>Start, switch, or advance your career with thousands of courses from expert instructors.</strong></p>
-                <div class="d-flex gap-3 justify-content-center">
-                    <a href="{% url 'courses:course_list' %}" class="btn btn-success btn-lg">Browse Courses</a>
+        <div class="row align-items-center">
+            <!-- Left column: Content -->
+            <div class="col-lg-7 home-hero-content">
+                <p class="home-hero-eyebrow" id="hero-eyebrow">
+                    <span class="hero-eyebrow-icon">&#10022;</span> Learn at your own pace
+                </p>
+                <h1 class="home-hero-title" id="hero-headline">
+                    Learn Without <span class="font-serif" style="font-style: italic;">Limits</span>.
+                </h1>
+                <p class="home-hero-sub" id="hero-sub">
+                    Advance your career with expert-led courses, hands-on projects, and a community that supports your growth.
+                </p>
+
+                <!-- Search bar -->
+                <form class="home-hero-search" id="hero-search" action="{% url 'courses:course_list' %}" method="get">
+                    <i class="bi bi-search home-search-icon"></i>
+                    <input type="text" name="q" class="home-search-input" placeholder="Search courses, topics, or skills...">
+                    <button type="submit" class="home-search-btn"><i class="bi bi-arrow-right"></i></button>
+                </form>
+
+                <!-- Social proof -->
+                <div class="home-hero-proof" id="hero-proof">
+                    <div class="avatar-stack">
+                        <span class="avatar-circle" style="background:#4F46E5;">A</span>
+                        <span class="avatar-circle" style="background:#10B981;">S</span>
+                        <span class="avatar-circle" style="background:#F59E0B;">K</span>
+                        <span class="avatar-circle" style="background:#EC4899;">M</span>
+                        <span class="avatar-circle" style="background:#6366F1;">R</span>
+                    </div>
+                    <span class="proof-text">Join <strong>10,000+</strong> learners advancing their skills</span>
+                </div>
+
+                <!-- CTAs -->
+                <div class="home-hero-ctas" id="hero-ctas">
+                    <a href="{% url 'courses:course_list' %}" class="btn-primary-app">Browse Courses</a>
                     {% if not user.is_authenticated %}
-                        <a href="{% url 'accounts:signup_student' %}" class="btn btn-outline-success btn-lg">Get Started</a>
+                        <a href="{% url 'accounts:signup_student' %}" class="home-hero-link">Get Started <span>&rarr;</span></a>
                     {% endif %}
+                </div>
+            </div>
+
+            <!-- Right column: Preview card stack -->
+            <div class="col-lg-5 d-none d-lg-block">
+                <div class="home-hero-visual" id="hero-visual">
+                    <div class="preview-card preview-card-back-2"></div>
+                    <div class="preview-card preview-card-back-1"></div>
+                    <div class="preview-card preview-card-front">
+                        <div class="preview-card-img"></div>
+                        <div class="preview-card-body">
+                            <span class="preview-card-tag">Web Development</span>
+                            <h4 class="preview-card-title">Modern JavaScript</h4>
+                            <div class="preview-card-tutor">
+                                <span class="preview-card-avatar">J</span>
+                                <span>Jane Smith</span>
+                            </div>
+                            <div class="preview-card-progress">
+                                <div class="preview-progress-bar">
+                                    <div class="preview-progress-fill"></div>
+                                </div>
+                                <span class="preview-progress-text">64% complete</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -112,4 +167,8 @@
     </div>
 </section>
 {% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/home-hero.js' %}"></script>
 {% endblock %}
