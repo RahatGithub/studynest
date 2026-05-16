@@ -807,7 +807,7 @@ h4 { font-size: 1.25rem; }
 /* Right visual: Fan card stack */
 .home-hero-visual {
     position: relative;
-    height: 420px;
+    height: 480px;
     display: flex;
     align-items: flex-end;
     justify-content: center;
@@ -816,10 +816,10 @@ h4 { font-size: 1.25rem; }
 
 .preview-card {
     position: absolute;
-    width: 250px;
-    bottom: 0;
+    width: 220px;
+    bottom: 20px;
     left: 50%;
-    margin-left: -125px; /* half of width, centers the pivot */
+    margin-left: -110px;
     border-radius: var(--radius-lg);
     background: var(--color-bg-elevated);
     box-shadow: var(--shadow-md);
@@ -827,7 +827,7 @@ h4 { font-size: 1.25rem; }
     overflow: hidden;
     cursor: pointer;
     will-change: transform, opacity;
-    transform-origin: 50% 120%;
+    transform-origin: 50% 180%;
     transition: box-shadow 0.25s ease, border-color 0.25s ease;
 }
 

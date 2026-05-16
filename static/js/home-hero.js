@@ -63,10 +63,10 @@ function initMessyDeck(cards, container) {
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const flipDuration = prefersReduced ? 0.01 : 0.6;
 
-    // Fan positions: rotation around bottom-center pivot (transform-origin set in CSS)
+    // Fan positions: rotation around bottom-center pivot (transform-origin: 50% 180% in CSS)
     const n = cards.length;
     const mid = (n - 1) / 2;
-    const spread = 8; // degrees between cards
+    const spread = 16; // degrees between cards → -32, -16, 0, 16, 32
     const deckPositions = cards.map((_, i) => {
         const offset = i - mid; // -2, -1, 0, 1, 2 for 5 cards
         return {
