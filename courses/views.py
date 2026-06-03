@@ -17,6 +17,50 @@ AVATAR_COLORS = [
     '#e11d48', '#7c3aed', '#d97706', '#06b6d4', '#be185d',
 ]
 
+def _build_avatar_list(count):
+    """Build a list of avatar dicts mixing real profile pictures, name-initial
+    letter avatars, and random-letter filler avatars with unique colors."""
+    from accounts.models import User
+
+    avatars = []
+
+    # 1. Users with profile pictures — show image, include letter fallback
+    users_with_pic = User.objects.exclude(profile_picture='').exclude(profile_picture__isnull=True)[:count]
+    for u in users_with_pic:
+        letter = (u.first_name[0] if u.first_name else u.username[0]).upper()
+        try:
+            src = u.profile_picture.url
+        except Exception:
+            src = None
+        if src:
+            avatars.append({'type': 'image', 'src': src, 'letter': letter})
+        else:
+            avatars.append({'type': 'letter', 'letter': letter})
+
+    # 2. Users without profile pictures — letter avatar with their initial
+    if len(avatars) < count:
+        remaining = count - len(avatars)
+        users_without_pic = (
+            User.objects.filter(Q(profile_picture='') | Q(profile_picture__isnull=True))[:remaining]
+        )
+        for u in users_without_pic:
+            letter = (u.first_name[0] if u.first_name else u.username[0]).upper()
+            avatars.append({'type': 'letter', 'letter': letter})
+
+    # 3. Filler random-letter avatars if not enough users
+    while len(avatars) < count:
+        avatars.append({'type': 'letter', 'letter': random.choice(string.ascii_uppercase)})
+
+    # Assign unique colors (used as background for letter avatars and as fallback for image avatars)
+    color_pool = AVATAR_COLORS[:]
+    random.shuffle(color_pool)
+    for i, av in enumerate(avatars):
+        av['color'] = color_pool[i % len(color_pool)]
+
+    random.shuffle(avatars)
+    return avatars
+
+
 def home(request):
     featured_courses = Course.objects.filter(is_published=True).select_related('tutor', 'category').order_by('-created_at')[:6]
     categories = Category.objects.annotate(course_count=Count('courses', filter=Q(courses__is_published=True)))
@@ -77,51 +121,13 @@ def home(request):
             },
         ]
 
-    # Build 10 avatar items for social proof stack
-    from accounts.models import User
-    avatars = []
-
-    # 1. Users with profile pictures — show image, include letter fallback
-    users_with_pic = User.objects.exclude(profile_picture='').exclude(profile_picture__isnull=True)[:10]
-    for u in users_with_pic:
-        letter = (u.first_name[0] if u.first_name else u.username[0]).upper()
-        try:
-            src = u.profile_picture.url
-        except Exception:
-            src = None
-        if src:
-            avatars.append({'type': 'image', 'src': src, 'letter': letter})
-        else:
-            avatars.append({'type': 'letter', 'letter': letter})
-
-    # 2. Users without profile pictures — letter avatar with their initial
-    if len(avatars) < 10:
-        remaining = 10 - len(avatars)
-        users_without_pic = (
-            User.objects.filter(Q(profile_picture='') | Q(profile_picture__isnull=True))[:remaining]
-        )
-        for u in users_without_pic:
-            letter = (u.first_name[0] if u.first_name else u.username[0]).upper()
-            avatars.append({'type': 'letter', 'letter': letter})
-
-    # 3. Filler random-letter avatars if not enough users
-    while len(avatars) < 10:
-        avatars.append({'type': 'letter', 'letter': random.choice(string.ascii_uppercase)})
-
-    # Assign unique colors (used as background for letter avatars and as fallback for image avatars)
-    color_pool = AVATAR_COLORS[:]
-    random.shuffle(color_pool)
-    for i, av in enumerate(avatars):
-        av['color'] = color_pool[i % len(color_pool)]
-
-    random.shuffle(avatars)
-
     context = {
         'featured_courses': featured_courses,
         'categories': categories,
         'hero_courses': hero_courses,
         'use_real_courses': use_real_courses,
-        'hero_avatars': avatars,
+        'hero_avatars': _build_avatar_list(10),
+        'educator_avatars': _build_avatar_list(6),
     }
     return render(request, 'courses/home.html', context)
 
