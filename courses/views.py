@@ -15,6 +15,8 @@ AVATAR_COLORS = [
     '#6366f1', '#0d9488', '#f97316', '#ec4899', '#f59e0b',
     '#10b981', '#0ea5e9', '#8b5cf6', '#ef4444', '#14b8a6',
     '#e11d48', '#7c3aed', '#d97706', '#06b6d4', '#be185d',
+    '#2563eb', '#ca8a04', '#dc2626', '#4f46e5', '#059669',
+    '#9333ea', '#0891b2', '#c026d3', '#ea580c', '#16a34a',
 ]
 
 def _build_avatar_list(count):
@@ -127,7 +129,7 @@ def home(request):
         'hero_courses': hero_courses,
         'use_real_courses': use_real_courses,
         'hero_avatars': _build_avatar_list(10),
-        'educator_avatars': _build_avatar_list(6),
+        'educator_avatars': _build_avatar_list(20),
     }
     return render(request, 'courses/home.html', context)
 
